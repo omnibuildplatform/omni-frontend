@@ -27,8 +27,8 @@ export function startBuild(data: AnyObj) {
 }
 
 // 获取返回结果
-export function getBuildResult(data: string) {
-  const url = `/api/v1/images/queryJobStatus/${data}`;
+export function getBuildResult(data: string, id: string) {
+  const url = `/api/v1/images/queryJobStatus/${data}?id=${id}`;
   return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
 

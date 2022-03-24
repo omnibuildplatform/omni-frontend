@@ -9,12 +9,19 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  download: {
+    type: String,
+    default: '',
+  },
 });
 const disableClass = computed(() => (props.disabled ? 'disabled' : 'enabled'));
 </script>
 <template>
-  <div class="btn" :class="disableClass">
-    <a>{{ data }}</a>
+  <a v-if="download" class="btn" :class="disableClass" :href="download" download="file">
+    {{ data }}
+  </a>
+  <div v-else class="btn" :class="disableClass">
+    {{ data }}
   </div>
 </template>
 <style lang="scss" scoped>

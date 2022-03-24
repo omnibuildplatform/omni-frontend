@@ -39,7 +39,7 @@ const selectClass: StringObj = {
 </script>
 <template>
   <div class="product-select-item" :class="selectClass[type]" :style="{ width }">
-    <el-select popper-class="block-popper" :popper-append-to-body="false" :model-value="value" placeholder="请选择" @change="change">
+    <el-select popper-class="block-popper" :popper-append-to-body="false" :model-value="value" placeholder="Please select" @change="change">
       <el-option v-for="item in options" :key="item" :label="item" :value="item"> </el-option>
     </el-select>
   </div>

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { Search, Check } from '@element-plus/icons-vue';
-import { reactive, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { CommonOptionsItem } from '@/shared/interface/interface';
 import { cloneDeep } from 'lodash';
-import { commonAssignArray } from '@/shared/methods/common';
 
 const props = defineProps({
   options: {
@@ -24,12 +23,12 @@ const searchValue = ref('');
 // options副本，记录选中状态
 let _options: CommonOptionsItem[] = [];
 // options展示副本，可供搜索
-let _searchOption: CommonOptionsItem[] = reactive([]);
+let _searchOption = ref([] as CommonOptionsItem[]);
 watch(
   () => props.options,
   () => {
     _options = cloneDeep(props.options);
-    commonAssignArray(_searchOption, searchData(_options));
+    _searchOption.value = searchData(_options);
   },
   { deep: true }
 );
@@ -37,8 +36,7 @@ watch(
   () => searchValue.value,
   () => {
     // 搜索展示
-    const data = searchData(_options);
-    commonAssignArray(_searchOption, data);
+    _searchOption.value = searchData(_options);
   }
 );
 const searchData = (data: CommonOptionsItem[]) => {

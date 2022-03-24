@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, nextTick, watch, computed } from 'vue';
+import { reactive, ref, nextTick, watch, computed, onMounted } from 'vue';
 import { getBuildResult, queryProductData, startBuild } from '@/api/api';
 import { useCounter } from '@/stores/counter';
 import { defineComponent } from 'vue-demi';
@@ -16,6 +16,9 @@ const counter = useCounter();
 defineComponent({
   ProductSelect,
   FileSelect,
+});
+onMounted(() => {
+  startLocalWS();
 });
 const selectArr = reactive([
   {
@@ -55,12 +58,12 @@ let defaultPackages = ref([]);
 let sigsGroup: string[] = reactive([]);
 queryProductData().then((res) => {
   const {
-    attach: { arch = [] },
+    attach: { packages = [] },
     data,
     other: { Sigs = [] },
   } = res;
   sigsGroup.push(...Sigs);
-  defaultPackages.value = arch;
+  defaultPackages.value = packages;
   selectArr.forEach((item) => {
     const pre = data[item.id];
     item.data = pre;
@@ -90,8 +93,21 @@ const build = () => {
   });
   clearWsDataBar();
   startBuild(data).then((res: AnyObj) => {
+    window.localStorage.setItem('wsData', JSON.stringify(res));
     createWSData(res);
   });
+};
+
+const startLocalWS = () => {
+  const ws = window.localStorage.getItem('wsData');
+  if (ws) {
+    // 启动ws
+    createWSData(JSON.parse(ws));
+  }
+};
+
+const clearLocalWS = () => {
+  window.localStorage.removeItem('wsData');
 };
 const productTransfer = ref<null | AnyObj>(null);
 const getProductTransferData = () => {
@@ -109,13 +125,13 @@ const wsDataBar = reactive({
 // 暂时使用假数据展示进度条
 const wsDataBarProcess = () => {
   if (wsDataBar.percentage < 99) {
-    wsDataBar.percentage = (wsDataBar.percentage * 10 + 1) / 10;
+    wsDataBar.percentage = (wsDataBar.percentage * 1000 + 10) / 1000;
   }
 };
 
 // 进度条跑完后需请求接口判断是否成功，success获取url，failed获取失败日志
-const queryBuildResult = (data: string) => {
-  getBuildResult(data).then((res) => {
+const queryBuildResult = (data: string, id: string) => {
+  getBuildResult(data, id).then((res) => {
     if (res.data.status === 'succeed') {
       wsDataBar.percentage = 100;
       wsDataBar.status = 'success';
@@ -151,12 +167,13 @@ const createWSData = (res: AnyObj) => {
     ws.onclose = () => {
       disabledBuildBtn.value = false;
       wsData.value += '\n';
+      clearLocalWS();
     };
     ws.onmessage = (evt) => {
       const result = JSON.parse(evt.data);
       wsData.value += result?.data || '';
       if (result.code === 1) {
-        queryBuildResult(data);
+        queryBuildResult(data, title);
       } else if (result.code === -1) {
         wsDataBar.status = 'exception';
       } else {
@@ -189,7 +206,7 @@ watch(
       </div>
     </div>
     <div class="common-level-one-color common-level-one-fz text-center m-b-24">Packages</div>
-    <div class="common-content-block m-b-64 default-packages">
+    <div class="common-content-block m-b-16 default-packages">
       <div class="common-level-one-color common-level-one-fz m-b-24">Default:</div>
       <div class="common-level-two-fz m-b-24 warning-tips">
         WARNING:The packages in the below list is the default package list to build up a basic usable openEuler dotnbutilon, please do nor modify the below list
@@ -197,21 +214,20 @@ watch(
       </div>
       <FileSelect :options="defaultPackages" width="100%" columns="3"></FileSelect>
     </div>
-    <div class="common-level-one-color common-level-one-fz text-center m-b-24">Custom</div>
     <div class="m-b-24">
       <ProductTransfer ref="productTransfer" :group="sigsGroup" :param="getCustomeParam"></ProductTransfer>
     </div>
     <div class="m-b-24 flex flex-center">
       <ProductButton data="build" :disabled="disabledBuildBtn" @click="build"></ProductButton>>
-      <ProductButton data="download" :disabled="!Boolean(wsDataBar.download)"></ProductButton>>
+      <ProductButton data="download" :disabled="!Boolean(wsDataBar.download)" :download="wsDataBar.download"></ProductButton>>
     </div>
     <div class="common-content-block">
       <div>
         <div class="common-level-one-color common-level-two-fz">Building...</div>
-        <ProductProgress class="m-b-24 m-t-24" :value="wsDataBar.percentage"></ProductProgress>
+        <ProductProgress class="m-b-24 m-t-24" :value="wsDataBar.percentage" :status="wsDataBar.status"></ProductProgress>
       </div>
       <div class="common-text-content-block">
-        <el-scrollbar ref="scrollbarRef" height="200px">
+        <el-scrollbar ref="scrollbarRef" height="600px">
           <div id="log_contain" class="common-level-two-color common-level-two-fz">
             <p class="m-b-16 log-data">{{ wsData }}</p>
           </div>

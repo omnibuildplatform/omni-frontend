@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import ProductSelect from '../product-select/ProductSelect.vue';
 import ProductFileSelect from '../product-file-select/ProductFileSelect.vue';
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 import { AnyObj, CommonOptionsItem, StringObj } from '@/shared/interface/interface';
 import { getCustomePkgList } from '@/api/api';
-import { commonAssignArray } from '@/shared/methods/common';
 import { cloneDeep } from 'lodash';
 const props = defineProps({
   group: {
@@ -31,7 +30,7 @@ const changeData = (sig: string) => {
     const {
       data: { rpms = [] },
     } = data;
-    commonAssignArray(sourceArr, getContainPkg(rpms));
+    sourceArr.value = getContainPkg(rpms);
   });
 };
 
@@ -43,10 +42,10 @@ const getContainPkg = (arr: StringObj[]) => {
   }));
 };
 // source内容展示
-const sourceArr: CommonOptionsItem[] = reactive([]);
+const sourceArr = ref([] as CommonOptionsItem[]);
 
 // target内容展示
-const targetArr: CommonOptionsItem[] = reactive([]);
+const targetArr = ref([] as CommonOptionsItem[]);
 
 // 选中sourse框内容并记录，用于传入target
 let _sourceArr: CommonOptionsItem[] = [];
@@ -62,21 +61,21 @@ const addTargetData = () => {
   const _data = cloneDeep(_sourceArr);
   const data = _data.filter((item) => {
     item.selected = false;
-    return !targetArr.some((it) => it.key === item.key);
+    return !targetArr.value.some((it) => it.key === item.key);
   });
-  targetArr.unshift(...data);
+  targetArr.value.unshift(...data);
 };
 const removeTargetData = () => {
-  const data = targetArr.filter((item) => {
+  const data = targetArr.value.filter((item) => {
     item.selected = false;
     return !_targetArr.some((it) => it.key === item.key);
   });
-  commonAssignArray(targetArr, data);
+  targetArr.value = data;
 };
 
 // 外部调用获取选择值
 const getTargetArr = () => {
-  return targetArr.map((item) => item.key);
+  return targetArr.value.map((item) => item.key);
 };
 defineExpose({
   getTargetArr,
@@ -94,7 +93,7 @@ defineExpose({
       <SvgIcon class="move-btm" name="arrow-left" @click="removeTargetData"></SvgIcon>
     </div>
     <div class="right">
-      <div class="common-level-one-color common-level-one-fz m-b-24">Target:</div>
+      <div class="common-level-one-color common-level-one-fz m-b-24">Custom:</div>
       <ProductFileSelect :options="targetArr" height="200px" width="100%" @select-data="getTargetSelectData($event)"></ProductFileSelect>
     </div>
   </div>
