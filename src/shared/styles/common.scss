@@ -1,0 +1,108 @@
+/*
+ * 自定义公共样式
+ * 界面间距尽量都是8的倍数，如8px，16px，保持统一，美观
+ */
+.m-b-8 {
+    margin-bottom: 8px;
+}
+.m-b-16 {
+    margin-bottom: 16px;
+}
+.m-b-24 {
+    margin-bottom: 24px;
+}
+.m-b-32 {
+    margin-bottom: 32px;
+}
+.m-b-40 {
+    margin-bottom: 40px;
+}
+.m-b-64 {
+    margin-bottom: 64px;
+}
+.m-t-16 {
+    margin-top: 16px;
+}
+.m-t-24 {
+    margin-top: 24px;
+}
+.m-t-32 {
+    margin-top: 32px;
+}
+.m-t-40 {
+    margin-top: 40px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-center {
+    align-items: center;
+    justify-content: center;
+}
+
+// 文本省略号
+.text-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+// 产品色
+.common-body-bg-color {
+    background-color: #181818;
+}
+@mixin common-content-bg-color {
+    background-color: #282828;
+}
+.common-content-bg-color {
+    @include common-content-bg-color;
+}
+@mixin common-text-content-bg-color {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+.common-text-content-bg-color {
+    @include common-text-content-bg-color;
+}
+// 字体色
+.common-level-one-color {
+    color: #fff;
+}
+.common-level-two-color {
+    color: #7c7c7c;
+}
+// 字体大小
+.common-level-one-fz {
+    font-size: 24px;
+    line-height: 28px;
+}
+.common-level-two-fz {
+    font-size: 18px;
+    line-height: 22px;
+}
+// 产品块公共样式
+.common-content-block {
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid #282828;
+    padding: 40px;
+    box-shadow: 0px 20px 60px 0px rgba(0, 0, 0, 0.2);
+    @include common-content-bg-color;
+}
+// 产品文字区块公共样式
+.common-text-content-block {
+    width: 100%;
+    box-shadow: inset 0px 10px 40px 0px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    padding: 20px 24px;
+    border: 1px solid #282828;
+    @include common-text-content-bg-color;
+}
+
+  

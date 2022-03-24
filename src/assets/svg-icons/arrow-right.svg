@@ -1,1 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="86px" height="65px" viewBox="0 0 86 65" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组</title>
+    <defs>
+        <linearGradient x1="0%" y1="100%" x2="101.797426%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#622EC3" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#4D65DB" stop-opacity="0.283653846" offset="31.900289%"></stop>
+            <stop stop-color="#379AEE" stop-opacity="0.836456512" offset="63.5928468%"></stop>
+            <stop stop-color="#53E9F6" offset="100%"></stop>
+            <stop stop-color="#13CCD7" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Noelle-UI-Kit-(Dark)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="OBP-默认" transform="translate(-917.000000, -849.000000)">
+            <g id="编组-4备份-3" transform="translate(368.000000, 694.000000)">
+                <g id="编组" transform="translate(549.000000, 155.000000)">
+                    <path d="M56.429551,0.935327433 C58.1221746,-0.484292376 60.6451464,-0.262979061 62.0647662,1.42964456 L62.0647662,1.42964456 L83.688279,27.2115253 C86.1822359,30.1850892 86.1822359,34.5197575 83.688279,37.4933214 L83.688279,37.4933214 L62.0647662,63.2752021 C61.304754,64.1813705 60.1826917,64.7047531 59,64.7047531 C56.790861,64.7047531 55,62.9138921 55,60.7047531 L55,60.7047531 L54.999,48.852 L0,48.8524234 L0,16.8524234 L54.999,16.852 L55,4.00009361 C55,2.89624801 55.4559244,1.84521739 56.2534627,1.0920679 Z" id="形状结合" fill="url(#linearGradient-1)"></path>
+                    <g id="编组-10" transform="translate(55.000000, 22.000000)" fill="#FFFFFF">
+                        <rect id="矩形" x="0" y="8" width="20" height="4" rx="2"></rect>
+                        <rect id="矩形备份-3" transform="translate(10.000000, 10.000000) rotate(-90.000000) translate(-10.000000, -10.000000) " x="0" y="8" width="20" height="4" rx="2"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

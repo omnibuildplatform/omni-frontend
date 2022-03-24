@@ -9,3 +9,9 @@ export interface BoolObj {
 export interface StringObj {
   [index: string]: string;
 }
+
+export interface CommonOptionsItem {
+  key: string;
+  label?: string;
+  selected?: boolean;
+}

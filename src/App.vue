@@ -8,10 +8,8 @@ import AppHeader from './components/AppHeader.vue';
 
 <template>
   <AppHeader />
-  <div class="app-body">
-    <div class="app-contain">
-      <router-view />
-    </div>
+  <div class="app-body common-body-bg-color">
+    <router-view />
   </div>
 </template>
 
@@ -21,11 +19,6 @@ import AppHeader from './components/AppHeader.vue';
   -moz-osx-font-smoothing: grayscale;
 }
 .app-body {
-  padding: 32px 24px;
-  background-color: rgba(245, 245, 246);
-  .app-contain {
-    padding: 16px 24px;
-    background-color: #fff;
-  }
+  padding: 4rem 23rem;
 }
 </style>
