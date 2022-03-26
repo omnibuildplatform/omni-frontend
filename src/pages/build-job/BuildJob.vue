@@ -150,6 +150,7 @@ const clearWsDataBar = () => {
   wsDataBar.percentage = 0;
   wsDataBar.status = '';
   wsDataBar.download = '';
+  wsData.value = '';
 };
 
 // 创建wbsocket长链接，监控日志

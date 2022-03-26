@@ -89,7 +89,7 @@ const getAllSelectData = () => {
   </div>
 </template>
 <style scoped lang="scss">
-::v-deep .search {
+:deep(.search) {
   .el-input-group__prepend {
     background-color: #161616;
     border-top-left-radius: 16px;

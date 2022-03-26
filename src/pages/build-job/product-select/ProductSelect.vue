@@ -50,7 +50,7 @@ const selectClass: StringObj = {
   .el-select {
     width: 100%;
   }
-  ::v-deep .el-input__inner {
+  :deep(.el-input__inner) {
     width: 100%;
     height: 52px;
     text-align: center;
@@ -62,7 +62,7 @@ const selectClass: StringObj = {
     border-radius: 26px;
   }
 }
-::v-deep .block-popper {
+:deep(.block-popper) {
   background: #444 !important;
 }
 
@@ -82,7 +82,7 @@ const selectClass: StringObj = {
   .el-select {
     width: 100%;
   }
-  ::v-deep .el-input__inner {
+  :deep(.el-input__inner) {
     height: 52px;
     text-align: center;
     background: rgba(0, 0, 0, 0.15);
