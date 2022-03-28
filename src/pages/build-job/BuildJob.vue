@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref, nextTick, watch, computed, onMounted } from 'vue';
 import { getBuildResult, queryProductData, startBuild } from '@/api/api';
-import { useCounter } from '@/stores/counter';
 import { defineComponent } from 'vue-demi';
 import ProductSelect from './product-select/ProductSelect.vue';
 import FileSelect from './file-select/FileSelect.vue';
@@ -10,8 +9,6 @@ import { ElScrollbar } from 'element-plus';
 import ProductProgress from './product-progress/ProductProgress.vue';
 import ProductButton from './product-button/ProductButton.vue';
 import ProductTransfer from './product-transfer/ProductTransfer.vue';
-
-const counter = useCounter();
 
 defineComponent({
   ProductSelect,
@@ -164,7 +161,6 @@ const createWSData = (res: AnyObj) => {
   setTimeout(() => {
     const url = `ws://${host}:${port}/wsQueryJobStatus?token=tokentest&jobname=${data}&jobDBID=${title}`;
     const ws = new WebSocket(url);
-    wsDataBar.percentage = 5;
     ws.onclose = () => {
       disabledBuildBtn.value = false;
       wsData.value += '\n';

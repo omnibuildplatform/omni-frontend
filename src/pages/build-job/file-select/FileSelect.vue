@@ -24,11 +24,11 @@ defineProps({
   },
 });
 const columnsClass: StringObj = {
-  1: 'one-columns',
-  2: 'two-columns',
-  3: 'three-columns',
-  4: 'four-columns',
-  5: 'five-columns',
+  '1': 'one-columns',
+  '2': 'two-columns',
+  '3': 'three-columns',
+  '4': 'four-columns',
+  '5': 'five-columns',
 };
 </script>
 <template>
