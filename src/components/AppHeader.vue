@@ -1,32 +1,14 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useStoreData } from '@/shared/utils/common';
 import SvgIcon from './SvgIcon.vue';
-const router = useRouter();
-
-interface NavItem {
-  id: string;
-  label: string;
-  href: string;
-}
-
-const navList = [
-  {
-    id: 'build-job',
-    label: 'build-job',
-    href: '/build-job',
-  },
-];
-
-const navClick = (item: NavItem) => {
-  router.push(item.href);
-};
+const { guardAuthClient } = useStoreData();
 </script>
 <template>
   <div class="common-content-bg-color app-header">
     <div class="app-header-logo">
       <SvgIcon class="logo" name="logo"></SvgIcon>
     </div>
-    <div class="common-level-one-color">admin</div>
+    <img :src="guardAuthClient.photo" :alt="guardAuthClient.nickname || 'admin'" class="img" />
   </div>
 </template>
 <style scoped lang="scss">
@@ -44,5 +26,12 @@ const navClick = (item: NavItem) => {
   height: 60px;
   width: 400px;
   margin-top: 10px;
+}
+.img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 24px;
+  cursor: pointer;
 }
 </style>

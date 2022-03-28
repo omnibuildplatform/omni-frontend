@@ -8,7 +8,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@authing/vue-ui-components": "^3.0.31",
     "@element-plus/icons-vue": "^1.1.4",
+    "unplugin-auto-import": "^0.6.6",
+    "unplugin-vue-components": "^0.18.5",
     "@types/lodash": "^4.14.180",
     "axios": "^0.26.0",
     "element-plus": "^2.1.2",

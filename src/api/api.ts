@@ -5,8 +5,8 @@ import { AnyObj, StringObj } from '@/shared/interface/interface';
 /**
  * 获取授权的相关回调链接
  */
-export function queryCourse() {
-  const url = '/courses/course-list.json';
+export function queryCourse(id: string) {
+  const url = `/api/v1/auth/getDetail/${id}`;
 
   return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
