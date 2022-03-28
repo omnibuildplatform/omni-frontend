@@ -1,3 +1,4 @@
+@import "./variable.scss";
 /*
  * 自定义公共样式
  * 界面间距尽量都是8的倍数，如8px，16px，保持统一，美观
@@ -55,28 +56,39 @@
 }
 
 // 产品色
-.common-body-bg-color {
-    background-color: #181818;
+@mixin common-body-bg-color {
+    background-color: $bg-color-theme1;
 }
 @mixin common-content-bg-color {
-    background-color: #282828;
+    background-color: $bg-color-theme2;
+}
+@mixin common-text-content-bg-color {   
+    background-color: $bg-color-theme3;
+}
+.common-body-bg-color {
+    @include common-body-bg-color;
 }
 .common-content-bg-color {
     @include common-content-bg-color;
 }
-@mixin common-text-content-bg-color {
-    background-color: rgba(0, 0, 0, 0.15);
-}
 .common-text-content-bg-color {
     @include common-text-content-bg-color;
 }
+
 // 字体色
+@mixin common-level-one-color {
+    color: $font-color-theme1;
+}
+@mixin common-level-two-color {
+    color: $font-color-theme2;
+}
 .common-level-one-color {
-    color: #fff;
+    @include common-level-one-color;
 }
 .common-level-two-color {
-    color: #7c7c7c;
+    @include common-level-two-color;
 }
+
 // 字体大小
 .common-level-one-fz {
     font-size: 24px;
