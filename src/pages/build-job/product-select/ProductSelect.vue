@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { StringObj } from '@/shared/interface/interface';
 
-const props = defineProps({
+defineProps({
   type: {
     type: String,
     default: 'default',
