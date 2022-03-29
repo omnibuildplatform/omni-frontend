@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useStoreData } from '@/shared/utils/common';
+import { showGuard } from '@/shared/utils/login';
 import SvgIcon from './SvgIcon.vue';
 const { guardAuthClient } = useStoreData();
 </script>
@@ -8,7 +9,7 @@ const { guardAuthClient } = useStoreData();
     <div class="app-header-logo">
       <SvgIcon class="logo" name="logo"></SvgIcon>
     </div>
-    <img :src="guardAuthClient.photo" :alt="guardAuthClient.nickname || 'admin'" class="img" />
+    <img :src="guardAuthClient.photo" :alt="guardAuthClient.nickname || 'admin'" @click="showGuard()" class="img" />
   </div>
 </template>
 <style scoped lang="scss">
