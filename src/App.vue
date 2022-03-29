@@ -9,12 +9,18 @@ setStoreData();
 </script>
 
 <template>
-  <router-view />
+  <AppHeader />
+  <div class="app-body common-body-bg-color">
+    <router-view />
+  </div>
 </template>
 
 <style lang="scss">
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.app-body {
+  padding: 4rem 23rem;
 }
 </style>
