@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { setStoreData } from './shared/utils/common';
+import { setStoreData } from './shared/utils/login';
 
 /*
  * This starter template is using Vue 3 <script setup> SFCs

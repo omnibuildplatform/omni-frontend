@@ -1,12 +1,13 @@
+import { Guard, GuardMode } from '@authing/native-js-ui-components';
+import { AnyObj } from '../interface/interface';
+import { queryCourse } from '@/api/api';
+import { useCounter } from '@/stores/counter';
+import { storeToRefs } from 'pinia';
+
 const LOGIN_KEYS = {
   USER_TOKEN: '_U_T_',
   USER_ID: '_U_I_',
 };
-
-import { Guard, GuardMode } from '@authing/native-js-ui-components';
-import { AnyObj } from '../interface/interface';
-import { queryCourse } from '@/api/api';
-import { useStoreData } from './common';
 
 // 存储用户id及token，用于下次登录
 export function saveUserAuth(id = '', code = '') {
@@ -79,4 +80,25 @@ export function removeGuard() {
 export function tokenFailIndicateLogin() {
   saveUserAuth();
   showGuard();
+}
+
+/**
+ * @callback store 将store返回，使用解构赋值接受
+ */
+export function useStoreData() {
+  const counter = useCounter();
+  const stores = storeToRefs(counter);
+  return stores;
+}
+
+// 刷新页面后store内参数被清除，需重新设定
+export function setStoreData() {
+  const { guardAuthClient } = useStoreData();
+  const { userId } = getUserAuth();
+  if (!guardAuthClient.value.photo && userId) {
+    queryCourse(userId).then((res) => {
+      const { data } = res;
+      guardAuthClient.value = data;
+    });
+  }
 }
