@@ -1,6 +1,6 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import BuildJob from '@/pages/build-job/BuildJob.vue';
-export const routes = [
+export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     redirect: '/build-job',

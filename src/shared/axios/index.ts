@@ -4,16 +4,17 @@ import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, Axio
 import handleResponse from './handleResponse';
 import handleError from './handleError';
 import setConfig from './setConfig';
+import { getUserAuth, tokenFailIndicateLogin } from '../utils/login';
 
 interface RequestConfig<D = any> extends AxiosRequestConfig {
   data?: D;
-  global?: boolean // 是否为全局请求， 全局请求在清除请求池时，不清除
+  global?: boolean; // 是否为全局请求， 全局请求在清除请求池时，不清除
 }
 
 interface RequestInstance extends AxiosInstance {
-  removeRequestInterceptor():void,
-  removeResponseInterceptor():void,
-  clearPendingPool(whiteList: Array<string>): Array<string> | null,
+  removeRequestInterceptor(): void;
+  removeResponseInterceptor(): void;
+  clearPendingPool(whiteList: Array<string>): Array<string> | null;
   getUri(config?: RequestConfig): string;
   request<T = any, R = AxiosResponse<T>, D = any>(config: RequestConfig<D>): Promise<R>;
   get<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: RequestConfig<D>): Promise<R>;
@@ -31,7 +32,7 @@ interface RequestInstance extends AxiosInstance {
  * 所以如果需要在实例中调用取消某个请求的方法（例如取消上传），请用intactRequest。
  */
 const intactRequest: AxiosStatic = setConfig(axios);
-const request: RequestInstance = (intactRequest.create() as RequestInstance);
+const request: RequestInstance = intactRequest.create() as RequestInstance;
 
 // 请求中的api
 const pendingPool: Map<string, any> = new Map();
@@ -45,25 +46,33 @@ const requestInterceptorId = request.interceptors.request.use(
     // request.config = Object.assign({}, config);
     // 定义取消请求
     config.cancelToken = new axios.CancelToken((cancelFn) => {
-      if(!config.url) {
+      if (!config.url) {
         return;
       }
       // 如果已请求，则取消重复请求
-      if(pendingPool.has(config.url)) {
+      if (pendingPool.has(config.url)) {
         cancelFn(`${config.url}请求重复`);
       } else {
         // 存储到请求池
         pendingPool.set(config.url, {
           cancelFn,
-          global: (config as RequestConfig).global, 
+          global: (config as RequestConfig).global,
         });
       }
     });
+    // 使用token
+    const { token } = getUserAuth();
+    if (token) {
+      const to = {
+        Authorization: token,
+      };
+      Object.assign(config.headers, to);
+    }
     return config;
   },
   (err: AxiosError) => {
     Promise.reject(err);
-  },
+  }
 );
 
 /**
@@ -73,7 +82,7 @@ const responseInterceptorId = request.interceptors.response.use(
   (response: AxiosResponse) => {
     const { config } = response;
     // 请求完成，移除请求池
-    if(config.url) {
+    if (config.url) {
       pendingPool.delete(config.url);
     }
 
@@ -89,15 +98,18 @@ const responseInterceptorId = request.interceptors.response.use(
 
     if (err.response) {
       err = handleError(err);
+
+      // 无效token跳转登录
+      if (err.code === '401') {
+        tokenFailIndicateLogin();
+      }
     }
     // 没有response(没有状态码)的情况
     // 如: 超时；断网；请求重复被取消；主动取消请求；
     else {
       // 被取消的请求
       if (axios.isCancel(err)) {
-        throw new axios.Cancel(
-          err.message || `请求'${config.url}'被取消`,
-        );
+        throw new axios.Cancel(err.message || `请求'${config.url}'被取消`);
       } else if (err.stack && err.stack.includes('timeout')) {
         err.message = '请求超时!';
       } else {
@@ -105,15 +117,15 @@ const responseInterceptorId = request.interceptors.response.use(
       }
     }
     return Promise.reject(err);
-  },
+  }
 );
 // 移除全局的请求拦截器
-function removeRequestInterceptor () {
+function removeRequestInterceptor() {
   request.interceptors.request.eject(requestInterceptorId);
 }
 
 // 移除全局的响应拦截器
-function removeResponseInterceptor () {
+function removeResponseInterceptor() {
   request.interceptors.response.eject(responseInterceptorId);
 }
 
@@ -123,14 +135,12 @@ function removeResponseInterceptor () {
  * 返回值 被取消了的api请求
  * 可以在路由变化时取消当前所有非全局的pending状态的请求
  */
-function clearPendingPool (whiteList: Array<string> = []) {
+function clearPendingPool(whiteList: Array<string> = []) {
   if (!pendingPool.size) {
     return null;
   }
 
-  const pendingUrlList: Array<string> = Array.from(pendingPool.keys()).filter(
-    (url: string) => !whiteList.includes(url),
-  );
+  const pendingUrlList: Array<string> = Array.from(pendingPool.keys()).filter((url: string) => !whiteList.includes(url));
   if (!pendingUrlList.length) {
     return null;
   }
@@ -149,7 +159,6 @@ function clearPendingPool (whiteList: Array<string> = []) {
 request.removeRequestInterceptor = removeRequestInterceptor;
 request.removeResponseInterceptor = removeResponseInterceptor;
 request.clearPendingPool = clearPendingPool;
-
 
 export {
   intactRequest,
