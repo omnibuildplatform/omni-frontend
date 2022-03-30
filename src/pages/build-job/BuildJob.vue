@@ -154,9 +154,10 @@ const clearWsDataBar = () => {
 const createWSData = (res: AnyObj) => {
   const {
     data,
-    attach: { host, port },
+    attach: { port },
     title,
   } = res;
+  const host = window.location.host;
   disabledBuildBtn.value = true;
   setTimeout(() => {
     const url = `ws://${host}:${port}/wsQueryJobStatus?token=tokentest&jobname=${data}&jobDBID=${title}`;
