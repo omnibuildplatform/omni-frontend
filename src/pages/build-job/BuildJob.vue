@@ -59,7 +59,7 @@ queryProductData().then((res) => {
     data,
     other: { Sigs = [] },
   } = res;
-  sigsGroup.push(...Sigs);
+  sigsGroup.push(...(Sigs || []));
   defaultPackages.value = packages;
   selectArr.forEach((item) => {
     const pre = data[item.id];
@@ -157,7 +157,7 @@ const createWSData = (res: AnyObj) => {
     attach: { port },
     title,
   } = res;
-  const host = window.location.host;
+  const host = window.location.hostname;
   disabledBuildBtn.value = true;
   setTimeout(() => {
     const url = `ws://${host}:${port}/wsQueryJobStatus?token=tokentest&jobname=${data}&jobDBID=${title}`;
@@ -216,8 +216,8 @@ watch(
       <ProductTransfer ref="productTransfer" :group="sigsGroup" :param="getCustomeParam"></ProductTransfer>
     </div>
     <div class="m-b-24 flex flex-center">
-      <ProductButton data="build" :disabled="disabledBuildBtn" @click="build"></ProductButton>>
-      <ProductButton data="download" :disabled="!Boolean(wsDataBar.download)" :download="wsDataBar.download"></ProductButton>>
+      <ProductButton data="build" :disabled="disabledBuildBtn" @click="build"></ProductButton>
+      <ProductButton data="download" :disabled="!Boolean(wsDataBar.download)" :download="wsDataBar.download"></ProductButton>
     </div>
     <div class="common-content-block">
       <div>
