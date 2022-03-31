@@ -152,15 +152,11 @@ const clearWsDataBar = () => {
 
 // 创建wbsocket长链接，监控日志
 const createWSData = (res: AnyObj) => {
-  const {
-    data,
-    attach: { port },
-    title,
-  } = res;
+  const { data, title } = res;
   const host = window.location.hostname;
   disabledBuildBtn.value = true;
   setTimeout(() => {
-    const url = `wss://${host}:${port}/ws/queryJobStatus?token=tokentest&jobname=${data}&jobDBID=${title}`;
+    const url = `ws://${host}/ws/queryJobStatus?token=tokentest&jobname=${data}&jobDBID=${title}`;
     const ws = new WebSocket(url);
     ws.onclose = () => {
       disabledBuildBtn.value = false;
