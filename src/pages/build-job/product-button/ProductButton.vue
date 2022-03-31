@@ -14,13 +14,20 @@ const props = defineProps({
     default: '',
   },
 });
+const emit = defineEmits(['pClick']);
+const clickBtn = () => {
+  if (props.disabled) {
+    return;
+  }
+  emit('pClick');
+};
 const disableClass = computed(() => (props.disabled ? 'disabled' : 'enabled'));
 </script>
 <template>
   <a v-if="download" class="btn" :class="disableClass" :href="download" download="file">
     {{ data }}
   </a>
-  <div v-else class="btn" :class="disableClass">
+  <div v-else class="btn" :class="disableClass" @click="clickBtn">
     {{ data }}
   </div>
 </template>

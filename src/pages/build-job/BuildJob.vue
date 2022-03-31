@@ -216,7 +216,7 @@ watch(
       <ProductTransfer ref="productTransfer" :group="sigsGroup" :param="getCustomeParam"></ProductTransfer>
     </div>
     <div class="m-b-24 flex flex-center">
-      <ProductButton data="build" :disabled="disabledBuildBtn" @click="disabledBuildBtn ? null : build"></ProductButton>
+      <ProductButton data="build" :disabled="disabledBuildBtn" @p-click="build"></ProductButton>
       <ProductButton data="download" :disabled="!Boolean(wsDataBar.download)" :download="wsDataBar.download"></ProductButton>
     </div>
     <div class="common-content-block">
