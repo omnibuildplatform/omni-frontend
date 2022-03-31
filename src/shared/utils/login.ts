@@ -49,6 +49,7 @@ export function initGuard() {
   if (!guard) {
     const appId = '623d6bf75c72636ebb8c5e4b';
     guard = new Guard(appId, {
+      title: 'OmniBuildPlatform',
       mode: GuardMode.Modal,
       clickCloseable: true,
       escCloseable: true,
