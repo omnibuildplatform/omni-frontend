@@ -35,6 +35,12 @@ export function getUserAuth() {
   };
 }
 
+// 退出登录
+export function logout() {
+  saveUserAuth();
+  window.location.reload();
+}
+
 // 登录弹窗
 let guard: any;
 export function showGuard() {
@@ -80,7 +86,7 @@ export function removeGuard() {
 // token失效打开登录
 export function tokenFailIndicateLogin() {
   saveUserAuth();
-  showGuard();
+  // showGuard();
 }
 
 /**

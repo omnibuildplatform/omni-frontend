@@ -22,5 +22,7 @@ setStoreData();
 }
 .app-body {
   padding: 4rem 23rem;
+  display: flex;
+  justify-content: center;
 }
 </style>

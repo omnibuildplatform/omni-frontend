@@ -153,14 +153,18 @@ const clearWsDataBar = () => {
 
 // 创建wbsocket长链接，监控日志
 const createWSData = (res: AnyObj) => {
+  const { token } = getUserAuth();
+  if (!token) {
+    return;
+  }
   const { data, title } = res;
   const host = window.location.host;
   disabledBuildBtn.value = true;
-
-  const { token } = getUserAuth();
   const url = `wss://${host}/ws/queryJobStatus?jobname=${data}`;
   const ws = new WebSocket(url, [token]);
-  ws.onclose = () => {
+  ws.onclose = (b: CloseEvent) => {
+    console.log('CloseEvent', b);
+
     disabledBuildBtn.value = false;
     wsData.value += '\n';
     clearLocalWS();
@@ -219,7 +223,7 @@ watch(
       <ProductTransfer ref="productTransfer" :group="sigsGroup" :param="getCustomeParam"></ProductTransfer>
     </div>
     <div class="m-b-24 flex flex-center">
-      <ProductButton data="build" :disabled="disabledBuildBtn" @p-click="build"></ProductButton>
+      <ProductButton class="build-btn" data="build" :disabled="disabledBuildBtn" @p-click="build"></ProductButton>
       <ProductButton data="download" :disabled="!Boolean(wsDataBar.download)" :download="wsDataBar.download"></ProductButton>
     </div>
     <div class="common-content-block">
@@ -250,6 +254,9 @@ watch(
 }
 .log-data {
   white-space: pre-wrap;
+}
+.build-btn {
+  margin-right: 24px;
 }
 .change-packages {
   display: flex;
