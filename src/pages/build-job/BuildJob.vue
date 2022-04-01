@@ -9,6 +9,7 @@ import { ElScrollbar } from 'element-plus';
 import ProductProgress from './product-progress/ProductProgress.vue';
 import ProductButton from './product-button/ProductButton.vue';
 import ProductTransfer from './product-transfer/ProductTransfer.vue';
+import { getUserAuth } from '@/shared/utils/login';
 
 defineComponent({
   ProductSelect,
@@ -153,28 +154,34 @@ const clearWsDataBar = () => {
 // 创建wbsocket长链接，监控日志
 const createWSData = (res: AnyObj) => {
   const { data, title } = res;
-  const host = window.location.hostname;
+  const host = window.location.host;
   disabledBuildBtn.value = true;
-  setTimeout(() => {
-    const url = `wss://${host}/ws/queryJobStatus?token=tokentest&jobname=${data}&jobDBID=${title}`;
-    const ws = new WebSocket(url);
-    ws.onclose = () => {
-      disabledBuildBtn.value = false;
-      wsData.value += '\n';
-      clearLocalWS();
-    };
-    ws.onmessage = (evt) => {
-      const result = JSON.parse(evt.data);
-      wsData.value += result?.data || '';
-      if (result.code === 1) {
-        queryBuildResult(data, title);
-      } else if (result.code === -1) {
-        wsDataBar.status = 'exception';
-      } else {
-        wsDataBarProcess();
-      }
-    };
-  }, 5000);
+
+  const { token } = getUserAuth();
+  const url = `wss://${host}/ws/queryJobStatus?jobname=${data}`;
+  const ws = new WebSocket(url, [token]);
+  ws.onclose = () => {
+    disabledBuildBtn.value = false;
+    wsData.value += '\n';
+    clearLocalWS();
+  };
+  ws.onmessage = (evt) => {
+    const result = JSON.parse(evt.data);
+    if (result.code === 1) {
+      // 成功
+      queryBuildResult(data, title);
+    } else if (result.code === -1) {
+      // 失败
+      wsDataBar.status = 'exception';
+    } else if (result.code === 99) {
+      // 心跳保持
+      return;
+    } else {
+      // 数据连接中
+      wsDataBarProcess();
+    }
+    wsData.value += result?.data || '';
+  };
 };
 
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>();
