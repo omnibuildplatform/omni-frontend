@@ -169,6 +169,9 @@ const createWSData = (res: AnyObj) => {
     wsData.value += '\n';
     clearLocalWS();
   };
+  ws.onerror = (err) => {
+    console.log('err', err);
+  };
   ws.onmessage = (evt) => {
     const result = JSON.parse(evt.data);
     if (result.code === 1) {
