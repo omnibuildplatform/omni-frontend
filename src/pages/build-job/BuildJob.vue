@@ -169,6 +169,11 @@ const createWSData = (res: AnyObj) => {
     wsData.value += '\n';
     clearLocalWS();
   };
+  ws.onopen = () => {
+    setInterval(() => {
+      ws.send('heart');
+    }, 30000);
+  };
   ws.onerror = (err) => {
     console.log('err', err);
   };
