@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, nextTick, watch, computed, onMounted } from 'vue';
+import { reactive, ref, nextTick, watch, computed, onMounted, onBeforeUnmount } from 'vue';
 import { getBuildResult, queryProductData, startBuild } from '@/api/api';
 import { defineComponent } from 'vue-demi';
 import ProductSelect from './product-select/ProductSelect.vue';
@@ -17,6 +17,12 @@ defineComponent({
 });
 onMounted(() => {
   startLocalWS();
+});
+onBeforeUnmount(() => {
+  if (ws) {
+    // 关闭ws链接
+    ws.close();
+  }
 });
 const selectArr = reactive([
   {
@@ -111,7 +117,7 @@ const productTransfer = ref<null | AnyObj>(null);
 const getProductTransferData = () => {
   return productTransfer?.value?.getTargetArr() || [];
 };
-const wsData = ref('');
+const wsData = ref(['']);
 
 // 进度条
 const wsDataBar = reactive({
@@ -123,7 +129,7 @@ const wsDataBar = reactive({
 // 暂时使用假数据展示进度条
 const wsDataBarProcess = () => {
   if (wsDataBar.percentage < 99) {
-    wsDataBar.percentage = (wsDataBar.percentage * 1000 + 10) / 1000;
+    wsDataBar.percentage = Math.round(wsDataBar.percentage * 1000 + 10) / 1000;
   }
 };
 
@@ -137,8 +143,8 @@ const queryBuildResult = (data: string, id: string) => {
     } else if (res.data.status === 'failed') {
       wsDataBar.percentage = 100;
       wsDataBar.status = 'exception';
-      wsData.value += '\n';
-      wsData.value += res.data.error;
+      wsData.value[wsData.value.length - 1] += '\n';
+      wsData.value[wsData.value.length - 1] += res.data.error;
     }
   });
 };
@@ -148,10 +154,11 @@ const clearWsDataBar = () => {
   wsDataBar.percentage = 0;
   wsDataBar.status = '';
   wsDataBar.download = '';
-  wsData.value = '';
+  wsData.value = [''];
 };
 
 // 创建wbsocket长链接，监控日志
+let ws: WebSocket;
 const createWSData = (res: AnyObj) => {
   const { token } = getUserAuth();
   if (!token) {
@@ -160,22 +167,12 @@ const createWSData = (res: AnyObj) => {
   const { data, title } = res;
   const host = window.location.host;
   disabledBuildBtn.value = true;
-  const url = `wss://${host}/ws/queryJobStatus?jobname=${data}`;
-  const ws = new WebSocket(url, [token]);
-  ws.onclose = (b: CloseEvent) => {
-    console.log('CloseEvent', b);
-
+  const url = `ws://${host}/ws/queryJobStatus?jobname=${data}`;
+  ws = new WebSocket(url, [token]);
+  ws.onclose = () => {
     disabledBuildBtn.value = false;
-    wsData.value += '\n';
+    wsData.value[wsData.value.length - 1] += '\n';
     clearLocalWS();
-  };
-  ws.onopen = () => {
-    setInterval(() => {
-      ws.send('heart');
-    }, 30000);
-  };
-  ws.onerror = (err) => {
-    console.log('err', err);
   };
   ws.onmessage = (evt) => {
     const result = JSON.parse(evt.data);
@@ -192,7 +189,10 @@ const createWSData = (res: AnyObj) => {
       // 数据连接中
       wsDataBarProcess();
     }
-    wsData.value += result?.data || '';
+    if (!(Math.round(wsDataBar.percentage * 100) % 50)) {
+      wsData.value.push('');
+    }
+    wsData.value[wsData.value.length - 1] += result?.data || '';
   };
 };
 
@@ -200,7 +200,7 @@ const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>();
 
 // 日志数据变化，滚动条在底部
 watch(
-  () => wsData.value,
+  () => wsData.value[wsData.value.length - 1],
   () => {
     nextTick(() => {
       const dom = document.getElementById('log_contain') || ({} as HTMLElement);
@@ -241,8 +241,8 @@ watch(
       </div>
       <div class="common-text-content-block">
         <el-scrollbar ref="scrollbarRef" height="600px">
-          <div id="log_contain" class="common-level-two-color common-level-two-fz">
-            <p class="m-b-16 log-data">{{ wsData }}</p>
+          <div id="log_contain" class="common-level-two-color common-level-two-fz log-contain">
+            <p v-for="item in wsData" :key="item" class="log-data">{{ item }}</p>
           </div>
         </el-scrollbar>
       </div>
@@ -259,6 +259,11 @@ watch(
 }
 .warning-tips {
   color: #ff6b57;
+}
+.log-contain {
+  p:last-child {
+    margin-bottom: 16px;
+  }
 }
 .log-data {
   white-space: pre-wrap;

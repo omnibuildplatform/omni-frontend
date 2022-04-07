@@ -85,6 +85,8 @@ export function removeGuard() {
 // token失效打开登录
 export function tokenFailIndicateLogin() {
   saveUserAuth();
+  const { guardAuthClient } = useStoreData();
+  guardAuthClient.value.photo = undefined;
   // showGuard();
 }
 
