@@ -167,7 +167,7 @@ const createWSData = (res: AnyObj) => {
   const { data, title } = res;
   const host = window.location.host;
   disabledBuildBtn.value = true;
-  const url = `ws://${host}/ws/queryJobStatus?jobname=${data}`;
+  const url = `wss://${host}/ws/queryJobStatus?jobname=${data}`;
   ws = new WebSocket(url, [token]);
   ws.onclose = () => {
     disabledBuildBtn.value = false;
