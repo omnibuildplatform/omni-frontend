@@ -169,10 +169,18 @@ const createWSData = (res: AnyObj) => {
   disabledBuildBtn.value = true;
   const url = `wss://${host}/ws/queryJobStatus?jobname=${data}`;
   ws = new WebSocket(url, [token]);
+  let timer: NodeJS.Timeout;
   ws.onclose = () => {
+    clearInterval(timer);
     disabledBuildBtn.value = false;
     wsData.value[wsData.value.length - 1] += '\n';
     clearLocalWS();
+  };
+  ws.onopen = () => {
+    // 发送心跳
+    timer = setInterval(() => {
+      ws.send('heart');
+    }, 30000);
   };
   ws.onmessage = (evt) => {
     const result = JSON.parse(evt.data);
