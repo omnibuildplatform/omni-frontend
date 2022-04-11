@@ -31,7 +31,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: config.VITE_PROXY_URL || 'http://192.168.1.193:8080',
+        target: config.VITE_PROXY_URL,
+        changeOrigin: true,
+      },
+      '/ws': {
+        target: config.VITE_PROXY_WS,
+        ws: true,
         changeOrigin: true,
       },
     },
