@@ -21,7 +21,8 @@ export default defineConfig({
     viteCompression({
       ext: '.gz',
       algorithm: 'gzip',
-      deleteOriginFile: true,
+      // 是否删除源文件
+      deleteOriginFile: false,
     }),
     createSvgIconsPlugin({
       iconDirs: [path.resolve('./src/assets/svg-icons')],
