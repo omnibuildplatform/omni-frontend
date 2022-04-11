@@ -87,7 +87,7 @@ export function tokenFailIndicateLogin() {
   saveUserAuth();
   const { guardAuthClient } = useStoreData();
   guardAuthClient.value.photo = undefined;
-  // showGuard();
+  showGuard();
 }
 
 /**
