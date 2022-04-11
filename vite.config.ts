@@ -7,7 +7,6 @@ import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import viteCompression from 'vite-plugin-compression';
 
-// https://vitejs.dev/config/
 const config = loadEnv('development', './');
 export default defineConfig({
   base: './',
