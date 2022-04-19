@@ -21,7 +21,7 @@ export default defineConfig({
       ext: '.gz',
       algorithm: 'gzip',
       // 是否删除源文件
-      deleteOriginFile: true,
+      deleteOriginFile: false,
     }),
     createSvgIconsPlugin({
       iconDirs: [path.resolve('./src/assets/svg-icons')],
