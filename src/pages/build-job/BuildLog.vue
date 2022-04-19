@@ -44,9 +44,7 @@ if (id) {
 // 接受到终止信号
 const complete = (e: AnyObj) => {
   if (e.percentage === 100 && percentage.value !== 100) {
-    getJobParam(id).then((res) => {
-      detail.value = res.data || {};
-    });
+    detail.value.Status = 'succeed';
   }
   percentage.value = e.percentage;
 };
