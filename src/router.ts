@@ -1,6 +1,12 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import { useStoreData } from './shared/utils/login';
 import AppHome from '@/pages/AppHome.vue';
+import AppControl from '@/pages/AppControl.vue';
+import GeneralView from '@/pages/general/GeneralView.vue';
+import RouterTemplate from '@/components/RouterTemplate.vue';
+import BuildImage from '@/pages/build-job/BuildImage.vue';
+import BuildLog from '@/pages/build-job/BuildLog.vue';
+import JobList from '@/pages/job-list/JobList.vue';
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -13,35 +19,35 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/control',
     name: 'control',
-    component: import('@/pages/AppControl.vue'),
+    component: AppControl,
     children: [
       { path: '', redirect: '/control/general-view' },
       {
         path: 'general-view',
-        component: import('@/pages/general/GeneralView.vue'),
+        component: GeneralView,
       },
       {
         path: 'build-image',
-        component: import('@/components/RouterTemplate.vue'),
+        component: RouterTemplate,
         children: [
           { path: '', redirect: '/control/build-image/build-job' },
           {
             path: 'build-job',
-            component: import('@/pages/build-job/BuildImage.vue'),
+            component: BuildImage,
           },
           {
             path: 'build-job/:id',
-            component: import('@/pages/build-job/BuildImage.vue'),
+            component: BuildImage,
           },
           {
             path: 'build-log/:id',
-            component: import('@/pages/build-job/BuildLog.vue'),
+            component: BuildLog,
           },
         ],
       },
       {
         path: 'job-list',
-        component: import('@/pages/job-list/JobList.vue'),
+        component: JobList,
       },
     ],
   },
