@@ -1,4 +1,4 @@
-@import "./variable.scss";
+@import "./_handle.scss";
 /*
  * 自定义公共样式
  * 界面间距尽量都是8的倍数，如8px，16px，保持统一，美观
@@ -34,11 +34,6 @@
     margin-top: 40px;
 }
 
-.body {
-    min-width: 1024px;
-    max-width: 1200px;
-}
-
 .text-center {
     text-align: center;
 }
@@ -60,38 +55,49 @@
     width: 100%;
 }
 
+.app-view-block {
+    width: 100%;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    min-height: 400px;
+}
+
+// 文字按钮样式
+.app-text-btn {
+    cursor: pointer;
+    color: rgba(#002FA7, 1.0);
+    &:active {
+        color: rgba(0, 47, 167, 0.7);
+    }
+}
+
+// 文字禁用按钮样式
+.app-disable-text-btn {
+    color: #555550;
+    cursor: not-allowed;
+}
+
+.c-mk {
+    background-color: yellow;
+}
+
 // 产品色
-@mixin common-body-bg-color {
-    background-color: $bg-color-theme1;
-}
-@mixin common-content-bg-color {
-    background-color: $bg-color-theme2;
-}
-@mixin common-text-content-bg-color {   
-    background-color: $bg-color-theme3;
-}
 .common-body-bg-color {
-    @include common-body-bg-color;
+    @include background_color('bg-color1');
 }
 .common-content-bg-color {
-    @include common-content-bg-color;
+    @include background_color('bg-color2');
 }
 .common-text-content-bg-color {
-    @include common-text-content-bg-color;
+    @include background_color('bg-color3');
 }
 
 // 字体色
-@mixin common-level-one-color {
-    color: $font-color-theme1;
-}
-@mixin common-level-two-color {
-    color: $font-color-theme2;
-}
 .common-level-one-color {
-    @include common-level-one-color;
+    @include font_color('font-color1');
 }
 .common-level-two-color {
-    @include common-level-two-color;
+    @include font_color('font-color2');
 }
 
 // 字体大小
@@ -103,23 +109,11 @@
     font-size: 18px;
     line-height: 22px;
 }
-// 产品块公共样式
-.common-content-block {
-    width: 100%;
-    border-radius: 16px;
-    border: 1px solid #282828;
-    padding: 40px;
-    box-shadow: 0px 20px 60px 0px rgba(0, 0, 0, 0.2);
-    @include common-content-bg-color;
-}
 // 产品文字区块公共样式
 .common-text-content-block {
     width: 100%;
-    box-shadow: inset 0px 10px 40px 0px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
     padding: 20px 24px;
-    border: 1px solid #282828;
-    @include common-text-content-bg-color;
+    @include background_color('bg-color1');
 }
 
   

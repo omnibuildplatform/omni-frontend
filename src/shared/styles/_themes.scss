@@ -1,0 +1,24 @@
+// 主题色配置
+$themes: (
+    default: (
+        // 一组背景色
+        bg-color1: #F5F7FB,
+        bg-color2: #fff,
+        bg-color3: #002FA7,
+
+        // 一组字体色
+        font-color1: #000,
+        font-color2: #555,
+    ),
+
+    dark: (
+        // 一组背景色
+        bg-color1: #181818,
+        bg-color2: #282828,
+        bg-color3: rgba(0, 0, 0, 0.15),
+
+        // 一组字体色
+        font-color1: #fff,
+        font-color2: #7c7c7c,
+    ),
+)

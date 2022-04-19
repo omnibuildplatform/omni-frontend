@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref, nextTick, watch, computed, onMounted, onBeforeUnmount } from 'vue';
-import { getBuildResult, queryProductData, startBuild } from '@/api/api';
+import { getBuildResult, queryProductData } from '@/api/api';
 import { defineComponent } from 'vue-demi';
 import ProductSelect from './product-select/ProductSelect.vue';
 import FileSelect from './file-select/FileSelect.vue';
@@ -14,6 +14,17 @@ import { getUserAuth } from '@/shared/utils/login';
 defineComponent({
   ProductSelect,
   FileSelect,
+});
+const props = defineProps({
+  defaultValue: {
+    type: Object,
+    default: () => ({
+      arch: '',
+      release: '',
+      buildType: '',
+      customPkg: [],
+    }),
+  },
 });
 onMounted(() => {
   startLocalWS();
@@ -71,7 +82,9 @@ queryProductData().then((res) => {
   selectArr.forEach((item) => {
     const pre = data[item.id];
     item.data = pre;
-    item.value = pre[0];
+
+    // 默认值优先设置
+    item.value = props.defaultValue[item.id] || pre[0];
   });
 });
 
@@ -95,11 +108,12 @@ const build = () => {
   selectArr.forEach((item) => {
     data[item.id] = item.value;
   });
-  clearWsDataBar();
-  startBuild(data).then((res: AnyObj) => {
-    window.localStorage.setItem('wsData', JSON.stringify(res));
-    createWSData(res);
-  });
+  return data;
+  // clearWsDataBar();
+  // startBuild(data).then((res: AnyObj) => {
+  //   window.localStorage.setItem('wsData', JSON.stringify(res));
+  //   createWSData(res);
+  // });
 };
 
 const startLocalWS = () => {
@@ -218,28 +232,39 @@ watch(
     });
   }
 );
+defineExpose({
+  build,
+});
 </script>
 <template>
-  <div class="body">
-    <div class="top-main m-b-64">
-      <div v-for="selectItem in selectArr" :key="selectItem.name" class="m-b-16">
-        <p class="common-level-one-color common-level-one-fz m-b-40 text-center text-ellipsis">{{ selectItem.name }}:</p>
-        <ProductSelect :value="selectItem.value" :options="selectItem.data" width="328px" @change-data="changeData($event, selectItem.id)"></ProductSelect>
+  <div class="job">
+    <div class="job-config">
+      <div class="job-title common-level-one-color common-level-one-fz m-b-24">Configure</div>
+      <div class="job-content common-content-bg-color">
+        <div class="job-config-select m-b-64">
+          <div v-for="selectItem in selectArr" :key="selectItem.name">
+            <p class="common-level-one-color common-level-one-fz m-b-24 text-center text-ellipsis">{{ selectItem.name }}:</p>
+            <ProductSelect :value="selectItem.value" :options="selectItem.data" width="328px" @change-data="changeData($event, selectItem.id)"></ProductSelect>
+          </div>
+        </div>
+        <div>
+          <ProductTransfer ref="productTransfer" :group="sigsGroup" :param="getCustomeParam" :default-target-arr="defaultValue.customPkg"></ProductTransfer>
+        </div>
       </div>
     </div>
-    <div class="common-level-one-color common-level-one-fz text-center m-b-24">Packages</div>
-    <div class="common-content-block m-b-16 default-packages">
-      <div class="common-level-one-color common-level-one-fz m-b-24">Default:</div>
-      <div class="common-level-two-fz m-b-24 warning-tips">
-        WARNING:The packages in the below list is the default package list to build up a basic usable openEuler dotnbutilon, please do nor modify the below list
-        unless you avre aware of what you are doing
+    <div class="job-packages">
+      <div class="job-title common-level-one-color common-level-one-fz m-b-24">Packages</div>
+      <div class="job-content common-content-bg-color m-b-16">
+        <div class="common-level-one-color common-level-one-fz m-b-8">Default:</div>
+        <div class="common-level-two-fz m-b-24 warning-tips">
+          WARNING:The packages in the below list is the default package list to build up a basic usable openEuler dotnbutilon, please do nor modify the below
+          list unless you avre aware of what you are doing
+        </div>
+        <FileSelect :options="defaultPackages" width="100%" columns="3"></FileSelect>
       </div>
-      <FileSelect :options="defaultPackages" width="100%" columns="3"></FileSelect>
     </div>
-    <div class="m-b-24">
-      <ProductTransfer ref="productTransfer" :group="sigsGroup" :param="getCustomeParam"></ProductTransfer>
-    </div>
-    <div class="m-b-24 flex flex-center">
+
+    <!-- <div class="m-b-24 flex flex-center">
       <ProductButton class="build-btn" data="build" :disabled="disabledBuildBtn" @p-click="build"></ProductButton>
       <ProductButton data="download" :disabled="!Boolean(wsDataBar.download)" :download="wsDataBar.download"></ProductButton>
     </div>
@@ -255,16 +280,34 @@ watch(
           </div>
         </el-scrollbar>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <style lang="scss" scoped>
-.top-main {
-  display: flex;
-  justify-content: space-between;
-}
-.default-packages {
-  height: 416px;
+.job {
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 40px;
+  padding-bottom: 24px;
+  min-width: 1024px;
+  max-width: 1200px;
+  &-title {
+    font-weight: bold;
+  }
+  &-content {
+    padding: 40px 64px;
+  }
+  &-config {
+    &-select {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  &-packages {
+    margin-top: 40px;
+  }
 }
 .warning-tips {
   color: #ff6b57;

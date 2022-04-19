@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="316px" height="60px" viewBox="0 0 316 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>OBP/logo</title>
-    <g id="OBP/logo" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="OBP/logo" stroke="none" stroke-width="1">
         <g id="编组">
             <polygon id="Fill-1" fill="#002FA7" points="39.9931298 48.5520338 39.9931298 40.9442526 33.3276069 37.1403241 26.662084 40.9442526 26.662084 48.5520338 33.3276069 52.3558863"></polygon>
             <polygon id="Fill-2" fill="#002FA7" points="26.6620764 40.983649 26.6620764 48.552049 33.3275993 52.3559015 33.3275993 44.7875015"></polygon>
@@ -67,7 +67,7 @@
             <polygon id="Fill-62" fill="#002FA7" points="15.4461092 17.0583789 15.4461092 24.6267789 22.1116321 28.4306314 22.1116321 20.8622314"></polygon>
             <polygon id="Fill-63" fill="#0D8DFF" points="15.4461092 17.0977296 22.1116321 20.9016582 28.777155 17.0977296 28.777155 17.0189673 22.1116321 13.2151148 15.4461092 17.0189673"></polygon>
         </g>
-        <text id="OmniBuildPlatform" font-family="DINCond-BlackAlternate" font-size="28" font-weight="normal" line-spacing="28" fill="#FAF7EE">
+        <text id="OmniBuildPlatform" font-family="DINCond-BlackAlternate" font-size="28" font-weight="normal" line-spacing="28">
             <tspan x="62" y="43">OmniBuildPlatform</tspan>
         </text>
     </g>

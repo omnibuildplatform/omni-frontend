@@ -4,18 +4,30 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AppAside: typeof import('./src/components/AppAside.vue')['default']
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
+    ElCollapse: typeof import('element-plus/es')['ElCollapse']
+    ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
+    ElMenu: typeof import('element-plus/es')['ElMenu']
+    ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElTable: typeof import('element-plus/es')['ElTable']
+    ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    JobListTable: typeof import('./src/components/JobListTable.vue')['default']
+    ListTable: typeof import('./src/components/ListTable.vue')['default']
+    OmniEchart: typeof import('./src/components/OmniEchart.vue')['default']
+    RouterTemplate: typeof import('./src/components/RouterTemplate.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']
   }
 }

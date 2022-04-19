@@ -15,3 +15,13 @@ export interface CommonOptionsItem {
   label?: string;
   selected?: boolean;
 }
+
+export type JobStatus = 'succeed' | 'failed' | 'waiting' | 'running';
+export interface LogDataItems {
+  id: string;
+  label: string;
+  time: string | number;
+  status: JobStatus;
+  lock: boolean;
+  value: any[];
+}

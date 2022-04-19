@@ -1,0 +1,39 @@
+@import "./themes.scss";
+
+// 遍历主题map
+@mixin themeify {
+    @each $theme-name, $theme-map in $themes {
+        // 提升为全局变量
+        $theme-map: $theme-map !global;
+        // & 嵌套的父容器标识
+        [data-theme="#{$theme-name}"] & {
+            @content;
+        }
+    }
+}
+
+// 声明一个根据key获取颜色的函数
+@function themed($key) {
+    @return map-get($map: $theme-map, $key: $key)
+};
+
+// 背景色
+@mixin background_color($color) {
+    @include themeify {
+        background-color: themed($color)!important;
+    }
+};
+
+// 字体色
+@mixin font_color($color) {
+    @include themeify {
+        color: themed($color)!important;
+    }
+}
+
+// 边框色
+@mixin border_color($color) {
+    @include themeify {
+        border-color: themed($color)!important;
+    }
+}

@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="86px" height="65px" viewBox="0 0 86 65" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>编组</title>
-    <defs>
-        <linearGradient x1="0%" y1="100%" x2="101.797426%" y2="100%" id="linearGradient-1">
-            <stop stop-color="#622EC3" stop-opacity="0" offset="0%"></stop>
-            <stop stop-color="#4D65DB" stop-opacity="0.283653846" offset="31.900289%"></stop>
-            <stop stop-color="#379AEE" stop-opacity="0.836456512" offset="63.5928468%"></stop>
-            <stop stop-color="#53E9F6" offset="100%"></stop>
-            <stop stop-color="#13CCD7" offset="100%"></stop>
-        </linearGradient>
-    </defs>
-    <g id="Noelle-UI-Kit-(Dark)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="OBP-默认" transform="translate(-917.000000, -849.000000)">
-            <g id="编组-4备份-3" transform="translate(368.000000, 694.000000)">
-                <g id="编组" transform="translate(549.000000, 155.000000)">
-                    <path d="M56.429551,0.935327433 C58.1221746,-0.484292376 60.6451464,-0.262979061 62.0647662,1.42964456 L62.0647662,1.42964456 L83.688279,27.2115253 C86.1822359,30.1850892 86.1822359,34.5197575 83.688279,37.4933214 L83.688279,37.4933214 L62.0647662,63.2752021 C61.304754,64.1813705 60.1826917,64.7047531 59,64.7047531 C56.790861,64.7047531 55,62.9138921 55,60.7047531 L55,60.7047531 L54.999,48.852 L0,48.8524234 L0,16.8524234 L54.999,16.852 L55,4.00009361 C55,2.89624801 55.4559244,1.84521739 56.2534627,1.0920679 Z" id="形状结合" fill="url(#linearGradient-1)"></path>
-                    <g id="编组-10" transform="translate(55.000000, 22.000000)" fill="#FFFFFF">
-                        <rect id="矩形" x="0" y="8" width="20" height="4" rx="2"></rect>
-                        <rect id="矩形备份-3" transform="translate(10.000000, 10.000000) rotate(-90.000000) translate(-10.000000, -10.000000) " x="0" y="8" width="20" height="4" rx="2"></rect>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>切片</title>
+    <g id="Noelle-UI-Kit-(Dark)" stroke="none" stroke-width="1">
+        <g id="03-Build-Image_下拉" transform="translate(-1242.000000, -554.000000)">
+            <g id="编组" transform="translate(644.000000, 384.000000)">
+                <g id="编组-5" transform="translate(530.000000, 158.000000)">
+                    <g id="ico-/-24-/-arrows-/-arrow_forward" transform="translate(68.000000, 12.000000)">
+                        <path d="M2,12.5 L2,11.5 C2,11.2238576 2.22385763,11 2.5,11 L18.67,11 L14.22,6.56 C14.1253437,6.4661167 14.0721008,6.33831877 14.0721008,6.205 C14.0721008,6.07168123 14.1253437,5.9438833 14.22,5.85 L14.93,5.15 C15.0238833,5.05534367 15.1516812,5.00210084 15.285,5.00210084 C15.4183188,5.00210084 15.5461167,5.05534367 15.64,5.15 L21.78,11.28 C21.9206925,11.4205174 22,11.6111546 22,11.81 L22,12.19 C21.997696,12.3884141 21.918884,12.5782794 21.78,12.72 L15.64,18.85 C15.5461167,18.9446563 15.4183188,18.9978992 15.285,18.9978992 C15.1516812,18.9978992 15.0238833,18.9446563 14.93,18.85 L14.22,18.14 C14.1259359,18.0478364 14.0729286,17.9216897 14.0729286,17.79 C14.0729286,17.6583103 14.1259359,17.5321636 14.22,17.44 L18.67,13 L2.5,13 C2.22385763,13 2,12.7761424 2,12.5 Z" id="Icon-color"></path>
                     </g>
                 </g>
             </g>
