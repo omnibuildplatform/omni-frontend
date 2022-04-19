@@ -3,13 +3,16 @@ import { ref } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 import { getHistoryList } from '@/api/api';
 const tableData = ref([]);
-const query = {
-  offset: 0,
-  limit: 100,
+const refresh = () => {
+  const query = {
+    offset: 0,
+    limit: 100,
+  };
+  getHistoryList(query).then((data) => {
+    tableData.value = data.data || [];
+  });
 };
-getHistoryList(query).then((data) => {
-  tableData.value = data.data || [];
-});
+refresh();
 const searchValue = ref('');
 </script>
 <template>
@@ -22,7 +25,7 @@ const searchValue = ref('');
       <div class="app-text-btn">delete</div>
     </div>
 
-    <JobListTable model="complex" :table-data="tableData"></JobListTable>
+    <JobListTable model="complex" :table-data="tableData" @refresh-table="refresh"></JobListTable>
   </div>
 </template>
 <style scoped lang="scss">

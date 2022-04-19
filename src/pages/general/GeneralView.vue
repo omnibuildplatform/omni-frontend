@@ -67,7 +67,7 @@ const goToBuild = () => {
     <div class="m-t-40 m-b-24 general-body">
       <p class="m-b-16 general-body-title">最近任务</p>
       <div class="general-body-table">
-        <JobListTable :table-data="tableData"></JobListTable>
+        <JobListTable :table-data="tableData" @refresh-table="refresh"></JobListTable>
       </div>
     </div>
   </div>

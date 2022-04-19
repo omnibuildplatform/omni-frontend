@@ -43,10 +43,11 @@ const reBuild = (id: string) => {
   router.push(`/control/build-image/build-job/${id}`);
 };
 const deletejob = (id: string) => {
-  deleteJob(id).then((data) => {
-    data;
+  deleteJob(id).then(() => {
+    emit('refreshTable');
   });
 };
+const emit = defineEmits(['refreshTable']);
 </script>
 <template>
   <el-table :data="tableData" style="width: 100%">
