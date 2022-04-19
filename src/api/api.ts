@@ -66,8 +66,9 @@ export function getJobParam(id: string) {
 
 // 获取单个任务每一步详情
 export function getJobStepDetail(data: StringObj) {
-  const { id, stepID, maxRecord = 99999999 } = data;
-  const url = `/api/v2/images/getLogsOf/${id}?stepID=${stepID}&maxRecord=${maxRecord}`;
+  const { id, stepID, uuid } = data;
+  const _uuid = uuid ? `&uuid=${uuid}` : '';
+  const url = `/api/v2/images/getLogsOf/${id}?stepID=${stepID}${_uuid}`;
   return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
 

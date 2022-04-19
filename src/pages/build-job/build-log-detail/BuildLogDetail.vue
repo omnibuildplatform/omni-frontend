@@ -45,14 +45,24 @@ const queryJob = () => {
       const { steps = [] } = data;
       totalTime.value = calcTime(data);
       if (steps) {
-        logDatas.value = steps.map((item: StringObj) => ({
+        const _data = steps.map((item: StringObj) => ({
           id: item.id,
           label: item.name,
           time: calcTime(item),
-          lock: false,
+          uuid: '',
           status: statusMap[item.state],
           value: [],
         }));
+        if (logDatas.value.length) {
+          // 轮询时仅更新引用值
+          logDatas.value.forEach((item, index) => {
+            const { time, status } = _data[index];
+            item.time = time;
+            item.status = status;
+          });
+        } else {
+          logDatas.value = _data;
+        }
         complete();
       }
       handleChange();
@@ -97,20 +107,22 @@ const handleChange = () => {
   activeNames.value.forEach((key) => {
     const findOne = logDatas.value.find((it) => key === it.id);
     // 值加载过一遍不用加载第二遍
-    if (findOne && !findOne.lock) {
+    if (findOne && findOne.uuid !== 'end') {
       const params = {
         id,
         stepID: key,
+        uuid: findOne.uuid,
       };
       getJobStepDetail(params).then((res) => {
         const { code, data } = res;
         if (code === 200) {
-          const arr = (data && data.split('\n')) || [];
-          const _arr = arr.slice(findOne.value.length);
-          findOne.value.push(..._arr);
-          if (findOne.status === 'succeed') {
+          const { log, stopOK, uuid } = data;
+          findOne.uuid = uuid;
+          const arr = (log && log.split('\n')) || [];
+          findOne.value.push(...arr);
+          if (stopOK === 'true') {
             // 成功后加载完日志，再次加载不用请求
-            findOne.lock = true;
+            findOne.uuid = 'end';
           }
         }
       });

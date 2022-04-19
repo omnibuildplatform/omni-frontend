@@ -14,7 +14,7 @@ const openControl = () => {
   router.push('/control');
 };
 const openGit = () => {
-  window.open('https://github.com/chenHusky/omni-frontend', '_blank');
+  window.open('https://github.com/omnibuildplatform/omni-frontend', '_blank');
 };
 </script>
 <template>

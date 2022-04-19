@@ -1,3 +1,5 @@
+import { number } from "echarts";
+
 export interface AnyObj {
   [index: string]: any;
 }
@@ -22,6 +24,6 @@ export interface LogDataItems {
   label: string;
   time: string | number;
   status: JobStatus;
-  lock: boolean;
+  uuid: string;
   value: any[];
 }
