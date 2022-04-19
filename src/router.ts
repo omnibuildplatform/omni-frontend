@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import { useStoreData } from './shared/utils/login';
+import AppHome from '@/pages/AppHome.vue';
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -7,7 +8,7 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     path: '/home',
-    component: import('./pages/AppHome.vue'),
+    component: AppHome,
   },
   {
     path: '/control',
