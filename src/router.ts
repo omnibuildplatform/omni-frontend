@@ -7,7 +7,7 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     path: '/home',
-    component: import('@/pages/AppHome.vue'),
+    component: import('./pages/AppHome.vue'),
   },
   {
     path: '/control',
