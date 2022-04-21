@@ -5,10 +5,10 @@ type statusIconMapConfig = {
   [index in JobStatus]: string;
 };
 export const statusIconMap: statusIconMapConfig = {
+  succeed: 'tab-succeed',
+  running: 'tab-running',
   failed: 'tab-failed',
   stopped: 'tab-failed',
-  succeed: 'tab-succeed',
   start: 'tab-waiting',
   waiting: 'tab-waiting',
-  running: 'tab-running',
 };

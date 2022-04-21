@@ -27,3 +27,9 @@ export interface LogDataItems {
   uuid: string;
   value: any[];
 }
+
+// job list 表格过滤项
+export type JobListFilterType = 'status' | 'arch' | 'type';
+export type JobListfilterConfig = {
+  [key in JobListFilterType]: string[];
+};

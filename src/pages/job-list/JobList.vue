@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 import { deleteJob, getHistoryList } from '@/api/api';
-import { StringObj } from '@/shared/interface/interface';
+import { AnyObj, JobListfilterConfig, JobListFilterType, StringObj } from '@/shared/interface/interface';
 const tableData = ref([]);
 const total = ref(0);
 const currentPage = ref(1);
@@ -15,10 +15,30 @@ const handleCurrentChange = (page: number) => {
   currentPage.value = page;
   refresh();
 };
+let filter = {} as JobListfilterConfig;
+const filterTab = (filters: JobListfilterConfig) => {
+  filter = filters;
+  refresh();
+};
+const searchValue = ref('');
+const changeInput = () => {
+  refresh();
+};
 const refresh = () => {
+  const filterParam: AnyObj = {};
+  if (filter) {
+    Object.keys(filter).reduce((pre, next) => {
+      if (filter[next as JobListFilterType].length) {
+        pre[next] = filter[next as JobListFilterType][0];
+      }
+      return pre;
+    }, filterParam);
+  }
   const query = {
     offset: (currentPage.value - 1) * pageSize.value,
     limit: pageSize.value,
+    nameordesc: searchValue.value,
+    ...filterParam,
   };
   getHistoryList(query).then((data) => {
     tableData.value = data.data || [];
@@ -26,7 +46,6 @@ const refresh = () => {
   });
 };
 refresh();
-const searchValue = ref('');
 const selectCol = ref([] as StringObj[]);
 const selectionChange = (evt: StringObj[]) => {
   selectCol.value = evt;
@@ -49,7 +68,7 @@ const openDeleteModal = () => {
 <template>
   <div class="job">
     <div class="job-header">
-      <el-input v-model="searchValue" class="job-header-search" placeholder="Search" :prefix-icon="Search" />
+      <el-input v-model="searchValue" class="job-header-search" placeholder="Search" :prefix-icon="Search" @change="changeInput()" />
     </div>
     <div class="job-neck">
       <span class="flex flex-center" :class="selectCol.length ? 'app-text-btn' : 'app-disable-text-btn'" @click="openDeleteModal">
@@ -57,7 +76,7 @@ const openDeleteModal = () => {
         <span>delete</span>
       </span>
     </div>
-    <JobListTable model="complex" :table-data="tableData" @refresh-table="refresh" @selection-change="selectionChange($event)"></JobListTable>
+    <JobListTable model="complex" :table-data="tableData" @refresh-table="filterTab($event)" @selection-change="selectionChange($event)"></JobListTable>
     <div class="pagination">
       <el-pagination
         v-model:currentPage="currentPage"

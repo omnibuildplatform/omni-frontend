@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router';
 import { statusIconMap } from '@/shared/utils/map.const';
 import { computed, ref } from 'vue';
 import { deleteJob } from '@/api/api';
+import { JobListfilterConfig, JobListFilterType } from '@/shared/interface/interface';
 const props = defineProps({
   tableData: {
     type: Array,
@@ -13,11 +14,32 @@ const props = defineProps({
     default: 'simple',
   },
 });
+
+// 表格过滤内容
+const tabFilterObj = ref({
+  status: [],
+  arch: [],
+  type: [],
+} as JobListfilterConfig);
+const filterHandler = (filter: JobListfilterConfig) => {
+  Object.keys(filter).forEach((item) => {
+    tabFilterObj.value[item as JobListFilterType] = filter[item as JobListFilterType];
+  });
+  emit('refreshTable', tabFilterObj.value);
+};
+const statusFilter = computed(() =>
+  props.model === 'simple'
+    ? null
+    : Object.keys(statusIconMap).map((key) => ({
+        text: key,
+        value: key,
+      }))
+);
 const buildTypeFilter = computed(() =>
   props.model === 'simple'
     ? null
     : [
-        { text: 'iso', value: 'iso' },
+        { text: 'installer-iso', value: 'installer-iso' },
         { text: 'vhd', value: 'vhd' },
         { text: 'qcow2', value: 'qcow2' },
         { text: 'raw', value: 'raw' },
@@ -27,7 +49,7 @@ const archFilter = computed(() =>
   props.model === 'simple'
     ? null
     : [
-        { text: 'X86', value: 'X86' },
+        { text: 'x86_64', value: 'x86_64' },
         { text: 'VRM', value: 'VRM' },
         { text: 'MIPS', value: 'MIPS' },
         { text: 'POWER', value: 'POWER' },
@@ -62,7 +84,7 @@ const openDeletejob = (id: string) => {
 };
 const deletejob = (id: string) => {
   deleteJob([id]).then(() => {
-    emit('refreshTable');
+    emit('refreshTable', tabFilterObj.value);
   });
 };
 const handleSelectionChange = (data: any[]) => {
@@ -71,15 +93,43 @@ const handleSelectionChange = (data: any[]) => {
 const emit = defineEmits(['refreshTable', 'selectionChange']);
 </script>
 <template>
-  <el-table :data="tableData" @selection-change="handleSelectionChange" style="width: 100%">
+  <el-table :data="tableData" style="width: 100%" @filter-change="filterHandler" @selection-change="handleSelectionChange">
     <el-table-column v-if="model !== 'simple'" type="selection" width="55" />
-    <el-table-column label="Status" width="75">
+    <el-table-column
+      column-key="status"
+      :filters="statusFilter"
+      filter-placement="bottom"
+      :filter-multiple="false"
+      :filtered-value="tabFilterObj.status"
+      label="Status"
+      width="85"
+    >
       <template #default="scope">
         <SvgIcon class="tab-status-icon" :name="statusIconMap[scope.row.Status]"></SvgIcon>
       </template>
     </el-table-column>
-    <el-table-column show-overflow-tooltip :filters="buildTypeFilter" prop="BuildType" label="Type" width="120" />
-    <el-table-column show-overflow-tooltip :filters="archFilter" prop="Arch" label="Architecture" width="130" />
+    <el-table-column
+      column-key="type"
+      show-overflow-tooltip
+      :filters="buildTypeFilter"
+      :filter-multiple="false"
+      filter-placement="bottom"
+      :filtered-value="tabFilterObj.type"
+      prop="BuildType"
+      label="Type"
+      width="120"
+    />
+    <el-table-column
+      column-key="arch"
+      show-overflow-tooltip
+      :filters="archFilter"
+      :filter-multiple="false"
+      filter-placement="bottom"
+      :filtered-value="tabFilterObj.arch"
+      prop="Arch"
+      label="Architecture"
+      width="130"
+    />
     <el-table-column show-overflow-tooltip prop="JobName" label="ID" />
     <el-table-column show-overflow-tooltip prop="JobLabel" label="Name" />
     <el-table-column show-overflow-tooltip prop="JobDesc" label="Description" />

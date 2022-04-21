@@ -69,3 +69,17 @@ export function timeRangeToRealTime(startTime: string | number, endTime: string 
     str: str ? str : '0s',
   };
 }
+
+/**
+ * 判断数据是否为空
+ * @param data 数据
+ * @param strict 是否为严格模式
+ * @returns boolean
+ */
+export function isCheckEmpty(data: any, strict = false): boolean {
+  const strictArr = [null, undefined, '', NaN];
+  if (strict) {
+    return strictArr.includes(data);
+  }
+  return [...strictArr, '', false].includes(data);
+}

@@ -1,6 +1,17 @@
 import { request } from '@/shared/axios';
 import type { AxiosResponse } from '@/shared/axios';
 import { AnyObj, StringObj } from '@/shared/interface/interface';
+import { isCheckEmpty } from '@/shared/utils/common';
+
+function getUrlParam(param: AnyObj): string {
+  return Object.keys(param)?.reduce((pre, next) => {
+    if (!isCheckEmpty(param[next], true)) {
+      pre += pre ? '&' : '?';
+      pre += `${next}=${param[next]}`;
+    }
+    return pre;
+  }, '');
+}
 
 /**
  * 获取授权的相关回调链接
@@ -47,8 +58,8 @@ export function getHistoryResult() {
 
 // 获取返回任务列表
 export function getHistoryList(data: AnyObj) {
-  const { offset = 0, limit = 10 } = data;
-  const url = `/api/v1/images/queryHistory/mine?offset=${offset}&limit=${limit}`;
+  const str = getUrlParam(data);
+  const url = `/api/v1/images/queryHistory/mine${str}`;
   return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
 
