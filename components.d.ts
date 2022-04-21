@@ -26,6 +26,7 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     JobListTable: typeof import('./src/components/JobListTable.vue')['default']
     ListTable: typeof import('./src/components/ListTable.vue')['default']
+    LoopImg: typeof import('./src/components/LoopImg.vue')['default']
     OmniEchart: typeof import('./src/components/OmniEchart.vue')['default']
     RouterTemplate: typeof import('./src/components/RouterTemplate.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']

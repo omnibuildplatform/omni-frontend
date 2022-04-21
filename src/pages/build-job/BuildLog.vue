@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { defineComponent, onBeforeUnmount, reactive, ref, watch } from 'vue-demi';
-import { SuccessRateOption } from '../general/echart-option.config';
+import { defineComponent, ref } from 'vue-demi';
 import FileSelect from './file-select/FileSelect.vue';
 import BuildJobDetail from './build-log-detail/BuildLogDetail.vue';
-import { getJobParam } from '@/api/api';
+import { getJobParam, stopJob } from '@/api/api';
 import { AnyObj } from '@/shared/interface/interface';
-import { cloneDeep } from 'lodash';
 defineComponent({
   FileSelect,
 });
@@ -18,16 +16,6 @@ const defaultPackages = ref([]);
 const custom = ref([]);
 // 暂时使用假数据展示进度条
 const percentage = ref(0);
-const successRateOption = reactive(cloneDeep(SuccessRateOption) as AnyObj);
-watch(
-  () => percentage.value,
-  () => initSvg()
-);
-const initSvg = () => {
-  successRateOption.title.text = `${percentage.value}%`;
-  successRateOption.series[0].data[0].value = percentage.value;
-  successRateOption.series[0].data[1].value = 100 - percentage.value;
-};
 if (id) {
   getJobParam(id).then((res) => {
     detail.value = res.data || {};
@@ -57,14 +45,22 @@ const download = () => {
     document.body.removeChild(a);
   }
 };
+const stop = () => {
+  stopJob(id).then(() => {
+    detail.value.Status = 'stopped';
+  });
+};
 </script>
 <template>
   <div class="build">
     <div class="build-left">
-      <div class="flex flex-center"><OmniEchart id="success_rate_echart" :option="successRateOption" /></div>
+      <div class="build-left-running">
+        <LoopImg :status="detail.Status" />
+        <span>{{ percentage + '%' }}</span>
+      </div>
       <div class="build-left-btngroup">
         <el-button class="btn" disabled type="primary">Build</el-button>
-        <el-button class="btn" disabled type="primary">Stop</el-button>
+        <el-button class="btn" :disabled="['succeed', 'failed', 'stopped'].includes(detail.Status)" type="primary" @click="stop">Stop</el-button>
         <el-button class="btn" :disabled="detail.Status !== 'succeed'" type="primary" @click="download">Download</el-button>
       </div>
       <div class="m-b-24 m-t-24 flex flex-center">
@@ -72,30 +68,30 @@ const download = () => {
       </div>
       <div class="build-left-content">
         <p>
-          Name:
+          <span class="build-left-content-label">Name:</span>
           <span>{{ detail.JobLabel || '--' }}</span>
         </p>
         <p>
-          Description:
+          <span class="build-left-content-label">Description:</span>
           <span>{{ detail.JobDesc || '--' }}</span>
         </p>
         <p>
-          Architecture:
+          <span class="build-left-content-label">Architecture:</span>
           <span>{{ detail.Arch }}</span>
         </p>
         <p>
-          Release Version:
+          <span class="build-left-content-label">Release Version:</span>
           <span>{{ detail.BuildType }}</span>
         </p>
         <p>
-          Output Format Version:
+          <span class="build-left-content-label">Output Format Version:</span>
           <span>{{ detail.Release }}</span>
         </p>
         <div v-if="custom.length">
-          <p>Custom:</p>
+          <p class="build-left-content-label">Custom:</p>
           <FileSelect :options="custom" width="100%" height="100px" columns="1"></FileSelect>
         </div>
-        <p>Default:</p>
+        <p class="build-left-content-label">Default:</p>
         <FileSelect :options="defaultPackages" width="100%" height="270px" columns="1"></FileSelect>
       </div>
     </div>
@@ -110,8 +106,20 @@ const download = () => {
   display: grid;
   grid-template-columns: 360px auto;
   &-left {
-    padding: 40px 24px;
+    padding: 0px 24px 40px;
     @include background_color('bg-color2');
+    &-running {
+      position: relative;
+      span {
+        position: absolute;
+        top: 150px;
+        left: 0;
+        font-size: 32px;
+        font-weight: bold;
+        text-align: center;
+        right: 0;
+      }
+    }
     &-btngroup {
       display: flex;
       justify-content: space-between;
@@ -132,6 +140,10 @@ const download = () => {
     &-content {
       font-size: 14px;
       line-height: 22px;
+      &-label {
+        font-weight: bold;
+        margin-right: 8px;
+      }
     }
   }
 }

@@ -17,7 +17,7 @@ export function commonAssignArray(pre: Array<any>, next: Array<any>) {
  */
 function computingDivision(dividend: number, divisor: number) {
   const quotient = Math.floor(dividend / divisor) || 0;
-  const remainder = dividend % divisor || 0;
+  const remainder = Math.round(dividend % divisor) || 0;
   return [quotient, remainder];
 }
 

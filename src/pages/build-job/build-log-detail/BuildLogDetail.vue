@@ -21,10 +21,12 @@ const emit = defineEmits(['complete']);
 const route = useRoute();
 const id = (route.params.id || '') as string;
 const statusMap: AnyObj = {
+  StepStart: 'waiting',
   StepCreated: 'waiting',
   StepRunning: 'running',
   StepSucceed: 'succeed',
   StepFailed: 'failed',
+  StepStopped: 'stopped',
 };
 // 计算所用时间
 const calcTime = (data: StringObj) => {
@@ -38,13 +40,24 @@ const calcTime = (data: StringObj) => {
   }
 };
 let timer: NodeJS.Timeout;
-const queryJob = () => {
+const queryJob = (type?: string) => {
   getJobDetail(id).then((res) => {
     if (res.data) {
       const { data } = res;
       const { steps = [] } = data;
       totalTime.value = calcTime(data);
+      if (['JobStopped', 'StepFailed'].includes(data.state)) {
+        timer && clearInterval(timer);
+      }
       if (steps) {
+        if (type === 'first') {
+          // 第一次打开详情，有running状态的步骤，默认打开
+          const findOne = steps.find((item: StringObj) => item.state === 'StepRunning');
+          if (findOne) {
+            activeNames.value.push(findOne?.id as never);
+          }
+        }
+
         const _data = steps.map((item: StringObj) => ({
           id: item.id,
           label: item.name,
@@ -63,14 +76,14 @@ const queryJob = () => {
         } else {
           logDatas.value = _data;
         }
-        complete();
+        complete(data.state);
       }
       handleChange();
     }
   });
 };
 if (id) {
-  queryJob();
+  queryJob('first');
   timer = setInterval(() => {
     queryJob();
   }, 5000);
@@ -85,7 +98,7 @@ const addTime = () => {
     percentageParam.percentage = Math.round(percentageParam.percentage * 10 + 1) / 10;
   }
 };
-const complete = () => {
+const complete = (status: string) => {
   addTime();
   const step = Math.floor(100 / logDatas.value.length);
   logDatas.value.forEach((item, index) => {
@@ -96,8 +109,8 @@ const complete = () => {
   if (logDatas.value[logDatas.value.length - 1].status === 'succeed') {
     timer && clearInterval(timer);
     percentageParam.percentage = 100;
-    percentageParam.status = 'succeed';
   }
+  percentageParam.status = statusMap[status];
   emit('complete', percentageParam);
 };
 const totalTime = ref('');
@@ -154,8 +167,11 @@ let logDatas = ref([] as LogDataItems[]);
         <div class="logs-box-header-left">
           <div class="logs-box-header-left-title">{{ name || '--' }}</div>
           <div class="logs-box-header-left-desc">
-            The total time consuming
-            <a>{{ totalTime }}</a>
+            <span v-if="totalTime">
+              Total time of consuming
+              <a>{{ totalTime }}</a>
+            </span>
+            <span v-else> Building... </span>
           </div>
         </div>
         <div class="logs-box-header-right">

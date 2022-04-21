@@ -73,7 +73,13 @@ export function getJobStepDetail(data: StringObj) {
 }
 
 // 删除任务
-export function deleteJob(id: string) {
-  const url = `/api/v2/images/deleteJob/${id}`;
+export function deleteJob(ids: string[]) {
+  const url = '/api/v2/images/deleteJob';
+  return request.post(url, ids, { global: true }).then((res: AxiosResponse) => res.data);
+}
+
+// 停止任务
+export function stopJob(id: string) {
+  const url = `/api/v2/images/stopJob/${id}`;
   return request.delete(url, { global: true }).then((res: AxiosResponse) => res.data);
 }

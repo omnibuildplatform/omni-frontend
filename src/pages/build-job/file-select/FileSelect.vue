@@ -34,7 +34,7 @@ const columnsClass: StringObj = {
 <template>
   <div class="common-text-content-block">
     <el-scrollbar :height="height">
-      <div class="common-level-two-fz common-level-two-color default-box" :style="{ width }" :class="columnsClass[columns]">
+      <div class="common-level-two-color default-box" :style="{ width }" :class="columnsClass[columns]">
         <div v-for="defaultItem in options" :key="(defaultItem as string)">
           {{ defaultItem }}
         </div>

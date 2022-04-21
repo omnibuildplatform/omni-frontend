@@ -3,7 +3,7 @@
   <div class="home">
     <div class="home-header">
       <div class="home-header-title">OmniBuildPlatform</div>
-      <div class="home-header-describe">Rebuilding the Possibilities of Operating System</div>
+      <div class="home-header-describe">xxx of build operating system</div>
     </div>
     <div class="home-main">
       <div class="home-main-content home-main-content-left"></div>
