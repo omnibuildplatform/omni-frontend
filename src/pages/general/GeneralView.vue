@@ -4,13 +4,14 @@ import { FailOption, SuccessOption, SuccessRateOption } from './echart-option.co
 import { useRouter } from 'vue-router';
 import { getHistoryList, getHistoryResult } from '@/api/api';
 import { reactive, ref } from 'vue';
-import { AnyObj } from '@/shared/interface/interface';
+import { AnyObj, JobStatus } from '@/shared/interface/interface';
 import { cloneDeep } from 'lodash';
 
 const router = useRouter();
 const successRateOption = reactive(cloneDeep(SuccessRateOption) as AnyObj);
 const successOption = reactive(cloneDeep(SuccessOption) as AnyObj);
 const failOption = reactive(cloneDeep(FailOption) as AnyObj);
+const stopOption = reactive(cloneDeep(FailOption) as AnyObj);
 const tableData = ref([]);
 
 const refresh = () => {
@@ -20,12 +21,13 @@ const refresh = () => {
   };
   getHistoryResult().then((res) => {
     const {
-      data: { failed = 3, succeed = 2 },
+      data: { failed = 0, succeed = 0, stopped = 0 },
     } = res;
     successOption.title.text = succeed > 999 ? '999+' : succeed;
     failOption.title.text = failed > 999 ? '999+' : failed;
+    stopOption.title.text = stopped > 999 ? '999+' : stopped;
     // 成功率计算
-    const total = failed + succeed;
+    const total = failed + succeed + stopped;
     if (total) {
       successRateOption.title.text = `${Math.round((succeed * 10000) / total) / 100}%`;
       successRateOption.series[0].data[0].value = succeed;
@@ -44,6 +46,10 @@ refresh();
 const goToBuild = () => {
   router.push('/control/build-image');
 };
+const jumpToJobList = (type: JobStatus) => {
+  console.log(type);
+  // router.push('/control/job-list');
+};
 </script>
 <template>
   <div class="general">
@@ -53,12 +59,16 @@ const goToBuild = () => {
         <span>Success Rate</span>
       </div>
       <div class="general-header-card middle-card">
-        <OmniEchart id="success_echart" :option="successOption" />
+        <OmniEchart id="success_echart" :option="successOption" @click="jumpToJobList('succeed')" />
         <span>Successed</span>
       </div>
-      <div class="general-header-card">
-        <OmniEchart id="failed_echart" :option="failOption" />
+      <div class="general-header-card middle-card">
+        <OmniEchart id="failed_echart" :option="failOption" @click="jumpToJobList('failed')" />
         <span>Failed</span>
+      </div>
+      <div class="general-header-card middle-card">
+        <OmniEchart id="stopped_echart" :option="stopOption" @click="jumpToJobList('stopped')" />
+        <span>Stopped</span>
       </div>
     </div>
     <div class="m-t-40 general-neck">
@@ -97,7 +107,6 @@ const goToBuild = () => {
     }
     .middle-card {
       margin-left: 24px;
-      margin-right: 24px;
     }
   }
 

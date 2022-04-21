@@ -4,13 +4,25 @@ import { Search } from '@element-plus/icons-vue';
 import { deleteJob, getHistoryList } from '@/api/api';
 import { StringObj } from '@/shared/interface/interface';
 const tableData = ref([]);
+const total = ref(0);
+const currentPage = ref(1);
+const pageSize = ref(20);
+const handleSizeChange = (size: number) => {
+  pageSize.value = size;
+  refresh();
+};
+const handleCurrentChange = (page: number) => {
+  currentPage.value = page;
+  refresh();
+};
 const refresh = () => {
   const query = {
-    offset: 0,
-    limit: 100,
+    offset: (currentPage.value - 1) * pageSize.value,
+    limit: pageSize.value,
   };
   getHistoryList(query).then((data) => {
     tableData.value = data.data || [];
+    total.value = data.attach || 0;
   });
 };
 refresh();
@@ -32,7 +44,7 @@ const openDeleteModal = () => {
   if (selectCol.value.length) {
     deleteVisible.value = true;
   }
-}
+};
 </script>
 <template>
   <div class="job">
@@ -46,6 +58,17 @@ const openDeleteModal = () => {
       </span>
     </div>
     <JobListTable model="complex" :table-data="tableData" @refresh-table="refresh" @selection-change="selectionChange($event)"></JobListTable>
+    <div class="pagination">
+      <el-pagination
+        v-model:currentPage="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[20, 50, 100]"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
   <el-dialog v-model="deleteVisible" title="Tips" width="30%" draggable center>
     <span>Clicking 【delete】 will delete this build jobs and its successfully built image files. Are you sure you want to delete this jobs?</span>
@@ -87,5 +110,8 @@ const openDeleteModal = () => {
       margin-right: 4px;
     }
   }
+}
+.pagination {
+  margin: 24px auto;
 }
 </style>
