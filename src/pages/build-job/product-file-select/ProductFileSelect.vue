@@ -19,6 +19,27 @@ const props = defineProps({
     default: '150px',
   },
 });
+
+// 全选
+const selectAll = ref({
+  key: 'All',
+  label: 'Select All',
+  selected: false,
+} as CommonOptionsItem);
+const clickSelectAll = () => {
+  selectAll.value.selected = !selectAll.value.selected;
+  _searchOption.value.forEach((item) => {
+    item.selected = selectAll.value.selected;
+  });
+  _options.forEach((item) => {
+    const label: string = item.label?.toLocaleUpperCase() || '';
+    const search = searchValue.value.toLocaleUpperCase();
+    if (label.includes(search)) {
+      item.selected = selectAll.value.selected;
+    }
+  });
+  emit('selectData', getAllSelectData());
+};
 const searchValue = ref('');
 // options副本，记录选中状态
 let _options: CommonOptionsItem[] = [];
@@ -70,6 +91,14 @@ const getAllSelectData = () => {
   <div class="common-text-content-block">
     <el-input v-model="searchValue" :prefix-icon="Search" placeholder="Please input" class="m-b-16"> </el-input>
     <div class="m-b-16 line"></div>
+    <div class="transfer m-b-8">
+      <div class="select-box" :class="selectAll.selected && 'common-text-content-bg-color'" @click="clickSelectAll()">
+        <el-icon v-if="selectAll.selected" :size="16" color="#ffffff"><check /></el-icon>
+      </div>
+      <div style="font-weight: 500">
+        {{ selectAll.label }}
+      </div>
+    </div>
     <el-scrollbar :height="height">
       <div class="common-level-two-fz common-level-two-color" :style="{ width }">
         <div v-for="defaultItem in _searchOption" :key="defaultItem.key" class="transfer m-b-8">
