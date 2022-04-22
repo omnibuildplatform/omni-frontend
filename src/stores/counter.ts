@@ -7,5 +7,8 @@ export const useCounter = defineStore('counter', () => {
   const selectAsideItem = ref('');
   const guardAuthClient = ref({} as AnyObj);
 
-  return { guardAuthClient, selectAsideItem };
+  // 跳转joblist的状态过滤
+  const statusToJobList = ref('');
+
+  return { guardAuthClient, selectAsideItem, statusToJobList };
 });

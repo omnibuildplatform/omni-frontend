@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import OmniEchart from '@/components/OmniEchart.vue';
-import { FailOption, SuccessOption, SuccessRateOption } from './echart-option.config';
+import { getPieEchartConfig, SuccessRateOption } from './echart-option.config';
 import { useRouter } from 'vue-router';
 import { getHistoryList, getHistoryResult } from '@/api/api';
 import { reactive, ref } from 'vue';
 import { AnyObj, JobStatus } from '@/shared/interface/interface';
 import { cloneDeep } from 'lodash';
+import { useStoreData } from '@/shared/utils/login';
 
 const router = useRouter();
 const successRateOption = reactive(cloneDeep(SuccessRateOption) as AnyObj);
-const successOption = reactive(cloneDeep(SuccessOption) as AnyObj);
-const failOption = reactive(cloneDeep(FailOption) as AnyObj);
-const stopOption = reactive(cloneDeep(FailOption) as AnyObj);
+const successOption = reactive(getPieEchartConfig('succeed') as AnyObj);
+const failOption = reactive(getPieEchartConfig('failed') as AnyObj);
+const stopOption = reactive(getPieEchartConfig('stopped') as AnyObj);
 const tableData = ref([]);
 
 const refresh = () => {
@@ -47,8 +48,9 @@ const goToBuild = () => {
   router.push('/control/build-image');
 };
 const jumpToJobList = (type: JobStatus) => {
-  console.log(type);
-  // router.push('/control/job-list');
+  const { statusToJobList } = useStoreData();
+  statusToJobList.value = type;
+  router.push('/control/job-list');
 };
 </script>
 <template>

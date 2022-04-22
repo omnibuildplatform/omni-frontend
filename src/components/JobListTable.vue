@@ -4,6 +4,7 @@ import { statusIconMap } from '@/shared/utils/map.const';
 import { computed, ref } from 'vue';
 import { deleteJob } from '@/api/api';
 import { JobListfilterConfig, JobListFilterType } from '@/shared/interface/interface';
+import { useStoreData } from '@/shared/utils/login';
 const props = defineProps({
   tableData: {
     type: Array,
@@ -21,6 +22,16 @@ const tabFilterObj = ref({
   arch: [],
   type: [],
 } as JobListfilterConfig);
+const getDefalutFilter = () => {
+  // 跳转过滤展示
+  const { statusToJobList } = useStoreData();
+  if (statusToJobList.value) {
+    tabFilterObj.value.status = [statusToJobList.value];
+    statusToJobList.value = '';
+    emit('refreshTable', tabFilterObj.value);
+  }
+};
+getDefalutFilter();
 const filterHandler = (filter: JobListfilterConfig) => {
   Object.keys(filter).forEach((item) => {
     tabFilterObj.value[item as JobListFilterType] = filter[item as JobListFilterType];
