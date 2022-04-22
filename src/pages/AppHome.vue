@@ -10,6 +10,7 @@
       <div class="home-main-content"></div>
     </div>
   </div>
+  <AppFooter />
 </template>
 <style scoped lang="scss">
 .home {

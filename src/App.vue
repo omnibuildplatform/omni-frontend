@@ -22,5 +22,8 @@ setStoreData();
 }
 .app-body {
   width: 100%;
+  ::-webkit-scrollbar {
+    display: inline;
+  }
 }
 </style>

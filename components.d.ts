@@ -5,6 +5,7 @@
 declare module 'vue' {
   export interface GlobalComponents {
     AppAside: typeof import('./src/components/AppAside.vue')['default']
+    AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
