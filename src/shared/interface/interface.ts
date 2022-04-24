@@ -1,5 +1,3 @@
-import { number } from "echarts";
-
 export interface AnyObj {
   [index: string]: any;
 }

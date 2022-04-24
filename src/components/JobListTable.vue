@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router';
 import { statusIconMap } from '@/shared/utils/map.const';
 import { computed, ref } from 'vue';
 import { deleteJob } from '@/api/api';
-import { JobListfilterConfig, JobListFilterType } from '@/shared/interface/interface';
+import { JobListfilterConfig, JobListFilterType, JobStatus } from '@/shared/interface/interface';
 import { useStoreData } from '@/shared/utils/login';
 const props = defineProps({
   tableData: {
@@ -102,6 +102,9 @@ const handleSelectionChange = (data: any[]) => {
   emit('selectionChange', data);
 };
 const emit = defineEmits(['refreshTable', 'selectionChange']);
+const getSvgName = (status: JobStatus) => {
+  return statusIconMap[status];
+};
 </script>
 <template>
   <el-table :data="tableData" style="width: 100%" @filter-change="filterHandler" @selection-change="handleSelectionChange">
@@ -116,7 +119,7 @@ const emit = defineEmits(['refreshTable', 'selectionChange']);
       width="85"
     >
       <template #default="scope">
-        <SvgIcon class="tab-status-icon" :name="statusIconMap[scope.row.Status]"></SvgIcon>
+        <SvgIcon class="tab-status-icon" :name="getSvgName(scope.row.Status)"></SvgIcon>
       </template>
     </el-table-column>
     <el-table-column

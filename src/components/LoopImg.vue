@@ -62,7 +62,7 @@ const clearTimer = () => {
 
 /* super inefficient right now, could be improved */
 onMounted(() => {
-  let c = document.getElementById('loop_img');
+  let c = document.getElementById('loop_img') as HTMLCanvasElement;
   ctx = c?.getContext('2d');
 
   /* Append Canvas */

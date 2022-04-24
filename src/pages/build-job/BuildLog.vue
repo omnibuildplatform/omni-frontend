@@ -31,10 +31,10 @@ if (id) {
 
 // 接受到终止信号
 const complete = (e: AnyObj) => {
-  if (e.percentage === 100 && percentage.value !== 100) {
-    detail.value.Status = 'succeed';
-  }
   percentage.value = e.percentage;
+  if (e.status && detail.value.Status !== e.status) {
+    detail.value.Status = e.status;
+  }
 };
 const download = () => {
   if (detail.value.Status === 'succeed') {
@@ -50,13 +50,17 @@ const stop = () => {
     detail.value.Status = 'stopped';
   });
 };
+const getStatusTitle = (status: string) => {
+  return status.slice(0, 1).toLocaleUpperCase() + status.slice(1);
+};
 </script>
 <template>
   <div class="build">
     <div class="build-left">
       <div class="build-left-running">
         <LoopImg :status="detail.Status" />
-        <span>{{ percentage + '%' }}</span>
+        <span v-if="['failed', 'stopped'].includes(detail.Status)">{{ getStatusTitle(detail.Status) }}</span>
+        <span v-else>{{ percentage + '%' }}</span>
       </div>
       <div class="build-left-btngroup">
         <el-button class="btn" disabled type="primary">Build</el-button>
