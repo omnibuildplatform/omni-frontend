@@ -140,7 +140,7 @@ const handleChange = () => {
           const { log, stopOK, uuid } = data;
           findOne.uuid = uuid;
           const arr = (log && log.split('\n')) || [];
-          findOne.value.push(...arr);
+          findOne.value = findOne.value.concat(arr);
           if (stopOK === 'true') {
             // 成功后加载完日志，再次加载不用请求
             findOne.uuid = 'end';
