@@ -28,6 +28,14 @@ const statusMap: AnyObj = {
   StepFailed: 'failed',
   StepStopped: 'stopped',
 };
+const jobStatusMap: AnyObj = {
+  JobStart: 'waiting',
+  JobCreated: 'waiting',
+  JobRunning: 'running',
+  JobSucceed: 'succeed',
+  JobFailed: 'failed',
+  JobStopped: 'stopped',
+};
 // 计算所用时间
 const calcTime = (data: StringObj) => {
   const startTime = new Date(data.startTime)?.getTime() || -1;
@@ -46,7 +54,7 @@ const queryJob = (type?: string) => {
       const { data } = res;
       const { steps = [] } = data;
       totalTime.value = calcTime(data);
-      if (['JobStopped', 'StepFailed'].includes(data.state)) {
+      if (['JobStopped', 'JobFailed'].includes(data.state)) {
         timer && clearInterval(timer);
       }
       if (steps) {
@@ -106,11 +114,11 @@ const complete = (status: string) => {
       percentageParam.percentage = step * index;
     }
   });
-  if (logDatas.value[logDatas.value.length - 1].status === 'succeed') {
+  if (jobStatusMap[status] === 'succeed') {
     timer && clearInterval(timer);
     percentageParam.percentage = 100;
   }
-  percentageParam.status = statusMap[status];
+  percentageParam.status = jobStatusMap[status];
   emit('complete', percentageParam);
 };
 const totalTime = ref('');

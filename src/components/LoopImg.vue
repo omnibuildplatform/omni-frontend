@@ -34,6 +34,10 @@ watch(
     circle.hue = getHue();
     if (ctx) {
       setProperties(ctx);
+      // 状态改变，再执行12次loop函数，才能达到变色效果
+      for (let i = 0; i < 12; i++) {
+        loop();
+      }
     }
   }
 );
@@ -55,9 +59,7 @@ const particleMax = 100;
 let timer: NodeJS.Timeout;
 
 const clearTimer = () => {
-  setTimeout(() => {
-    timer && clearInterval(timer);
-  }, 200);
+  timer && clearInterval(timer);
 };
 
 /* super inefficient right now, could be improved */
