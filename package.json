@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@authing/vue-ui-components": "^3.0.31",
+    "@authing/native-js-ui-components": "^3.0.31",
     "@element-plus/icons-vue": "^1.1.4",
     "@types/lodash": "^4.14.180",
     "axios": "^0.26.0",
