@@ -19,6 +19,27 @@ const props = defineProps({
     default: '150px',
   },
 });
+
+// 全选
+const selectAll = ref({
+  key: 'All',
+  label: 'Select All',
+  selected: false,
+} as CommonOptionsItem);
+const clickSelectAll = () => {
+  selectAll.value.selected = !selectAll.value.selected;
+  _searchOption.value.forEach((item) => {
+    item.selected = selectAll.value.selected;
+  });
+  _options.forEach((item) => {
+    const label: string = item.label?.toLocaleUpperCase() || '';
+    const search = searchValue.value.toLocaleUpperCase();
+    if (label.includes(search)) {
+      item.selected = selectAll.value.selected;
+    }
+  });
+  emit('selectData', getAllSelectData());
+};
 const searchValue = ref('');
 // options副本，记录选中状态
 let _options: CommonOptionsItem[] = [];
@@ -68,19 +89,23 @@ const getAllSelectData = () => {
 </script>
 <template>
   <div class="common-text-content-block">
-    <el-input v-model="searchValue" placeholder="Please input" class="m-b-16 search">
-      <template #prepend>
-        <el-button :icon="Search" />
-      </template>
-    </el-input>
+    <el-input v-model="searchValue" :prefix-icon="Search" placeholder="Please input" class="m-b-16"> </el-input>
     <div class="m-b-16 line"></div>
+    <div class="transfer m-b-8">
+      <div class="select-box" :class="selectAll.selected && 'common-text-content-bg-color'" @click="clickSelectAll()">
+        <el-icon v-if="selectAll.selected" :size="16" color="#ffffff"><check /></el-icon>
+      </div>
+      <div style="font-weight: 500">
+        {{ selectAll.label }}
+      </div>
+    </div>
     <el-scrollbar :height="height">
       <div class="common-level-two-fz common-level-two-color" :style="{ width }">
-        <div v-for="defaultItem in _searchOption" :key="defaultItem.key" class="m-b-8 flex">
-          <div class="flex flex-center select-box" :class="defaultItem.selected && 'selected'" @click="clickCheckBox(defaultItem)">
-            <el-icon v-if="defaultItem.selected" color="#ffffff"><check /></el-icon>
+        <div v-for="defaultItem in _searchOption" :key="defaultItem.key" class="transfer m-b-8">
+          <div class="select-box" :class="defaultItem.selected && 'common-text-content-bg-color'" @click="clickCheckBox(defaultItem)">
+            <el-icon v-if="defaultItem.selected" :size="16" color="#ffffff"><check /></el-icon>
           </div>
-          <div>
+          <div :class="defaultItem.selected && 'common-level-one-color'">
             {{ defaultItem.label }}
           </div>
         </div>
@@ -89,36 +114,21 @@ const getAllSelectData = () => {
   </div>
 </template>
 <style scoped lang="scss">
-:deep(.search) {
-  .el-input-group__prepend {
-    background-color: #161616;
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
-    box-shadow: none;
-  }
-  .el-input__inner {
-    background-color: #161616;
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
-    box-shadow: none;
-  }
-}
 .line {
   height: 2px;
-  background: #424242;
+  background: rgba($color: #424242, $alpha: 0.05);
   border-radius: 1px;
 }
 
+.transfer {
+  display: flex;
+  align-items: center;
+}
 .select-box {
   margin-right: 12px;
-  width: 24px;
-  height: 24px;
-  background: #161616;
-  border-radius: 6px;
-  border: 1px solid #363636;
-}
-.selected {
-  background: linear-gradient(360deg, #622ec3 0%, #4d65db 32%, #379aee 64%, #53e9f6 100%, #13ccd7 100%);
-  box-shadow: 0px 10px 20px 0px rgba(59, 45, 143, 0.25);
+  width: 18px;
+  height: 18px;
+  border: 1px solid #8d8d8d;
+  line-height: 18px;
 }
 </style>

@@ -1,14 +1,55 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-import BuildJob from '@/pages/build-job/BuildJob.vue';
+import { useStoreData } from './shared/utils/login';
+import AppHome from '@/pages/AppHome.vue';
+import AppControl from '@/pages/AppControl.vue';
+import GeneralView from '@/pages/general/GeneralView.vue';
+import RouterTemplate from '@/components/RouterTemplate.vue';
+import BuildImage from '@/pages/build-job/BuildImage.vue';
+import BuildLog from '@/pages/build-job/BuildLog.vue';
+import JobList from '@/pages/job-list/JobList.vue';
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/build-job',
+    redirect: '/home',
   },
   {
-    path: '/build-job',
-    name: 'build-job',
-    component: BuildJob,
+    path: '/home',
+    component: AppHome,
+  },
+  {
+    path: '/control',
+    name: 'control',
+    component: AppControl,
+    children: [
+      { path: '', redirect: '/control/general-view' },
+      {
+        path: 'general-view',
+        component: GeneralView,
+      },
+      {
+        path: 'build-image',
+        component: RouterTemplate,
+        children: [
+          { path: '', redirect: '/control/build-image/build-job' },
+          {
+            path: 'build-job',
+            component: BuildImage,
+          },
+          {
+            path: 'build-job/:id',
+            component: BuildImage,
+          },
+          {
+            path: 'build-log/:id',
+            component: BuildLog,
+          },
+        ],
+      },
+      {
+        path: 'job-list',
+        component: JobList,
+      },
+    ],
   },
 ];
 
@@ -18,8 +59,17 @@ export const router = createRouter({
 });
 
 // 路由守卫，可在此处进行页面权限处理
-// router.beforeEach((to) => {
-// if (!isLogined()) {
-//   return { name: "home" };
-// }
-// });
+router.beforeEach((to, from, next) => {
+  const { selectAsideItem } = useStoreData();
+  selectAsideItem.value = '';
+  if (to.matched.length) {
+    // 侧边栏aside选中值与路由保持一致
+    const pathArr = to.path?.split('/') || [];
+    if (pathArr[1] === 'control') {
+      selectAsideItem.value = `/${pathArr[1]}/${pathArr[2]}` || '';
+    }
+    next();
+  } else {
+    next('/home');
+  }
+});

@@ -1,7 +1,9 @@
 import 'virtual:svg-icons-register';
 import '@/shared/styles/base.scss';
 import '@/shared/styles/common.scss';
+import '@/shared/styles/reset-scroll.scss';
 import '@authing/native-js-ui-components/lib/index.min.css';
+import '@/shared/utils/ele-reset.ts';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';

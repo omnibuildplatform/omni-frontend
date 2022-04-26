@@ -3,11 +3,12 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useCounter = defineStore('counter', () => {
-  const count = ref(0);
-  const increment = () => {
-    count.value++;
-  };
+  // 侧边栏默认选择，根据路由对应切换
+  const selectAsideItem = ref('');
   const guardAuthClient = ref({} as AnyObj);
 
-  return { guardAuthClient, count, increment };
+  // 跳转joblist的状态过滤
+  const statusToJobList = ref('');
+
+  return { guardAuthClient, selectAsideItem, statusToJobList };
 });

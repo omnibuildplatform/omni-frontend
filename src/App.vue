@@ -10,7 +10,7 @@ setStoreData();
 
 <template>
   <AppHeader />
-  <div class="app-body common-body-bg-color">
+  <div class="common-body-bg-color app-body">
     <router-view />
   </div>
 </template>
@@ -21,6 +21,9 @@ setStoreData();
   -moz-osx-font-smoothing: grayscale;
 }
 .app-body {
-  padding: 4rem 23rem;
+  width: 100%;
+  ::-webkit-scrollbar {
+    display: inline;
+  }
 }
 </style>

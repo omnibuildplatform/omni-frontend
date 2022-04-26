@@ -1,21 +1,26 @@
 <script setup lang="ts">
-import { reactive, ref, nextTick, watch, computed, onMounted } from 'vue';
-import { getBuildResult, queryProductData, startBuild } from '@/api/api';
+import { reactive, ref, computed } from 'vue';
+import { queryProductData } from '@/api/api';
 import { defineComponent } from 'vue-demi';
 import ProductSelect from './product-select/ProductSelect.vue';
 import FileSelect from './file-select/FileSelect.vue';
 import { AnyObj } from '@/shared/interface/interface';
-import { ElScrollbar } from 'element-plus';
-import ProductProgress from './product-progress/ProductProgress.vue';
-import ProductButton from './product-button/ProductButton.vue';
 import ProductTransfer from './product-transfer/ProductTransfer.vue';
 
 defineComponent({
   ProductSelect,
   FileSelect,
 });
-onMounted(() => {
-  startLocalWS();
+const props = defineProps({
+  defaultValue: {
+    type: Object,
+    default: () => ({
+      arch: '',
+      release: '',
+      buildType: '',
+      customPkg: [],
+    }),
+  },
 });
 const selectArr = reactive([
   {
@@ -59,12 +64,14 @@ queryProductData().then((res) => {
     data,
     other: { Sigs = [] },
   } = res;
-  sigsGroup.push(...Sigs);
+  sigsGroup.push(...(Sigs || []));
   defaultPackages.value = packages;
   selectArr.forEach((item) => {
     const pre = data[item.id];
     item.data = pre;
-    item.value = pre[0];
+
+    // 默认值优先设置
+    item.value = props.defaultValue[item.id] || pre[0];
   });
 });
 
@@ -76,7 +83,6 @@ const changeData = (e: string, type: string) => {
   });
 };
 
-const disabledBuildBtn = ref(false);
 const build = () => {
   const data: AnyObj = {
     arch: '',
@@ -88,164 +94,85 @@ const build = () => {
   selectArr.forEach((item) => {
     data[item.id] = item.value;
   });
-  clearWsDataBar();
-  startBuild(data).then((res: AnyObj) => {
-    window.localStorage.setItem('wsData', JSON.stringify(res));
-    createWSData(res);
-  });
-};
-
-const startLocalWS = () => {
-  const ws = window.localStorage.getItem('wsData');
-  if (ws) {
-    // 启动ws
-    createWSData(JSON.parse(ws));
-  }
-};
-
-const clearLocalWS = () => {
-  window.localStorage.removeItem('wsData');
+  return data;
 };
 const productTransfer = ref<null | AnyObj>(null);
 const getProductTransferData = () => {
   return productTransfer?.value?.getTargetArr() || [];
 };
-const wsData = ref('');
 
-// 进度条
-const wsDataBar = reactive({
-  status: '',
-  percentage: 0,
-  download: '',
+defineExpose({
+  build,
 });
-
-// 暂时使用假数据展示进度条
-const wsDataBarProcess = () => {
-  if (wsDataBar.percentage < 99) {
-    wsDataBar.percentage = (wsDataBar.percentage * 1000 + 10) / 1000;
-  }
-};
-
-// 进度条跑完后需请求接口判断是否成功，success获取url，failed获取失败日志
-const queryBuildResult = (data: string, id: string) => {
-  getBuildResult(data, id).then((res) => {
-    if (res.data.status === 'succeed') {
-      wsDataBar.percentage = 100;
-      wsDataBar.status = 'success';
-      wsDataBar.download = res.data.url;
-    } else if (res.data.status === 'failed') {
-      wsDataBar.percentage = 100;
-      wsDataBar.status = 'exception';
-      wsData.value += '\n';
-      wsData.value += res.data.error;
-    }
-  });
-};
-
-// 清空进度条数据
-const clearWsDataBar = () => {
-  wsDataBar.percentage = 0;
-  wsDataBar.status = '';
-  wsDataBar.download = '';
-  wsData.value = '';
-};
-
-// 创建wbsocket长链接，监控日志
-const createWSData = (res: AnyObj) => {
-  const {
-    data,
-    attach: { host, port },
-    title,
-  } = res;
-  disabledBuildBtn.value = true;
-  setTimeout(() => {
-    const url = `ws://${host}:${port}/wsQueryJobStatus?token=tokentest&jobname=${data}&jobDBID=${title}`;
-    const ws = new WebSocket(url);
-    ws.onclose = () => {
-      disabledBuildBtn.value = false;
-      wsData.value += '\n';
-      clearLocalWS();
-    };
-    ws.onmessage = (evt) => {
-      const result = JSON.parse(evt.data);
-      wsData.value += result?.data || '';
-      if (result.code === 1) {
-        queryBuildResult(data, title);
-      } else if (result.code === -1) {
-        wsDataBar.status = 'exception';
-      } else {
-        wsDataBarProcess();
-      }
-    };
-  }, 5000);
-};
-
-const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>();
-
-// 日志数据变化，滚动条在底部
-watch(
-  () => wsData.value,
-  () => {
-    nextTick(() => {
-      const dom = document.getElementById('log_contain') || ({} as HTMLElement);
-      const { scrollHeight } = dom;
-      scrollbarRef.value?.setScrollTop(scrollHeight);
-    });
-  }
-);
 </script>
 <template>
-  <div class="body">
-    <div class="top-main m-b-64">
-      <div v-for="selectItem in selectArr" :key="selectItem.name" class="m-b-16">
-        <p class="common-level-one-color common-level-one-fz m-b-40 text-center text-ellipsis">{{ selectItem.name }}:</p>
-        <ProductSelect :value="selectItem.value" :options="selectItem.data" width="328px" @change-data="changeData($event, selectItem.id)"></ProductSelect>
-      </div>
-    </div>
-    <div class="common-level-one-color common-level-one-fz text-center m-b-24">Packages</div>
-    <div class="common-content-block m-b-16 default-packages">
-      <div class="common-level-one-color common-level-one-fz m-b-24">Default:</div>
-      <div class="common-level-two-fz m-b-24 warning-tips">
-        WARNING:The packages in the below list is the default package list to build up a basic usable openEuler dotnbutilon, please do nor modify the below list
-        unless you avre aware of what you are doing
-      </div>
-      <FileSelect :options="defaultPackages" width="100%" columns="3"></FileSelect>
-    </div>
-    <div class="m-b-24">
-      <ProductTransfer ref="productTransfer" :group="sigsGroup" :param="getCustomeParam"></ProductTransfer>
-    </div>
-    <div class="m-b-24 flex flex-center">
-      <ProductButton data="build" :disabled="disabledBuildBtn" @click="build"></ProductButton>>
-      <ProductButton data="download" :disabled="!Boolean(wsDataBar.download)" :download="wsDataBar.download"></ProductButton>>
-    </div>
-    <div class="common-content-block">
-      <div>
-        <div class="common-level-one-color common-level-two-fz">Building...</div>
-        <ProductProgress class="m-b-24 m-t-24" :value="wsDataBar.percentage" :status="wsDataBar.status"></ProductProgress>
-      </div>
-      <div class="common-text-content-block">
-        <el-scrollbar ref="scrollbarRef" height="600px">
-          <div id="log_contain" class="common-level-two-color common-level-two-fz">
-            <p class="m-b-16 log-data">{{ wsData }}</p>
+  <div class="job">
+    <div class="job-config">
+      <div class="job-title common-level-one-color common-level-one-fz m-b-24">Configure</div>
+      <div class="job-content common-content-bg-color">
+        <div class="job-config-select m-b-64">
+          <div v-for="selectItem in selectArr" :key="selectItem.name">
+            <p class="common-level-one-color common-level-one-fz m-b-24 text-center text-ellipsis">{{ selectItem.name }}:</p>
+            <ProductSelect :value="selectItem.value" :options="selectItem.data" width="328px" @change-data="changeData($event, selectItem.id)"></ProductSelect>
           </div>
-        </el-scrollbar>
+        </div>
+        <div>
+          <ProductTransfer ref="productTransfer" :group="sigsGroup" :param="getCustomeParam" :default-target-arr="defaultValue.customPkg"></ProductTransfer>
+        </div>
+      </div>
+    </div>
+    <div class="job-packages">
+      <div class="job-title common-level-one-color common-level-one-fz m-b-24">Packages</div>
+      <div class="job-content common-content-bg-color m-b-16">
+        <div class="common-level-one-color common-level-one-fz m-b-8">Default:</div>
+        <div class="common-level-two-fz m-b-24 warning-tips">
+          WARNING:The packages in the below list is the default package list to build up a basic usable openEuler dotnbutilon, please do nor modify the below
+          list unless you avre aware of what you are doing
+        </div>
+        <FileSelect :options="defaultPackages" width="100%" columns="3"></FileSelect>
       </div>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
-.top-main {
-  display: flex;
-  justify-content: space-between;
-}
-.default-packages {
-  height: 416px;
+.job {
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 40px;
+  padding-bottom: 24px;
+  min-width: 1024px;
+  max-width: 1200px;
+  &-title {
+    font-weight: bold;
+  }
+  &-content {
+    padding: 40px 64px;
+  }
+  &-config {
+    &-select {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  &-packages {
+    margin-top: 40px;
+  }
 }
 .warning-tips {
   color: #ff6b57;
 }
+.log-contain {
+  p:last-child {
+    margin-bottom: 16px;
+  }
+}
 .log-data {
   white-space: pre-wrap;
+}
+.build-btn {
+  margin-right: 24px;
 }
 .change-packages {
   display: flex;

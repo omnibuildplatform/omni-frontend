@@ -38,13 +38,14 @@ const selectClass: StringObj = {
 };
 </script>
 <template>
-  <div class="product-select-item" :class="selectClass[type]" :style="{ width }">
+  <div :class="selectClass[type]" :style="{ width }">
     <el-select popper-class="block-popper" :popper-append-to-body="false" :model-value="value" placeholder="Please select" @change="change">
       <el-option v-for="item in options" :key="item" :label="item" :value="item"> </el-option>
     </el-select>
   </div>
 </template>
 <style lang="scss" scoped>
+@import '../../../shared/styles/handle.scss';
 // 穿透样式
 .product-select-item {
   .el-select {
@@ -52,30 +53,11 @@ const selectClass: StringObj = {
   }
   :deep(.el-input__inner) {
     width: 100%;
-    height: 52px;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.25);
-    box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
-    border: 2px solid #ffffff;
-    font-size: 15px;
+    height: 48px;
+    @include background_color('bg-color3');
+    border: 1px solid #ffffff;
+    font-size: 16px;
     color: #ffffff;
-    border-radius: 26px;
-  }
-}
-:deep(.block-popper) {
-  background: #444 !important;
-}
-
-.block-popper {
-  .el-select-dropdown__item {
-    color: #ffffff;
-  }
-  .el-select-dropdown__item.hover,
-  .el-select-dropdown__item:hover {
-    background-color: #181818;
-  }
-  .el-select-dropdown__item.selected {
-    color: var(--el-color-primary);
   }
 }
 .product-select-group-item {
@@ -83,14 +65,7 @@ const selectClass: StringObj = {
     width: 100%;
   }
   :deep(.el-input__inner) {
-    height: 52px;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.15);
-    box-shadow: inset 0px 10px 40px 0px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    font-size: 15px;
-    color: #ffffff;
-    border-radius: 8px;
+    height: 40px;
   }
 }
 </style>
