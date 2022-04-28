@@ -81,5 +81,5 @@ export function isCheckEmpty(data: any, strict = false): boolean {
   if (strict) {
     return strictArr.includes(data);
   }
-  return [...strictArr, '', false].includes(data);
+  return [...strictArr, 0, false].includes(data);
 }

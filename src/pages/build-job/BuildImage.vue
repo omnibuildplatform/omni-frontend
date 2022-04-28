@@ -37,7 +37,7 @@ const build = () => {
   createJob(data).then((res) => {
     if (res?.data?.JobName) {
       // 构建成功跳转详情
-      router.push(`/control/build-image/build-log/${res.data.JobName}`);
+      router.push(`/control/build-job/build-log/${res.data.JobName}`);
     }
   });
 };

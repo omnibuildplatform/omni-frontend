@@ -11,6 +11,8 @@
     "@authing/native-js-ui-components": "^3.0.31",
     "@element-plus/icons-vue": "^1.1.4",
     "@types/lodash": "^4.14.180",
+    "@wangeditor/editor": "^5.0.1",
+    "@wangeditor/editor-for-vue": "^5.1.10",
     "axios": "^0.26.0",
     "echarts": "^5.3.2",
     "element-plus": "^2.1.2",
@@ -35,6 +37,7 @@
     "unplugin-auto-import": "^0.6.6",
     "unplugin-vue-components": "^0.18.5",
     "vite": "^2.9.5",
+    "vite-plugin-inspect": "^0.5.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-tsc": "^0.29.8"
   }

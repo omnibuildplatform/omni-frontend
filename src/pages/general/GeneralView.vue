@@ -45,7 +45,7 @@ const refresh = () => {
 };
 refresh();
 const goToBuild = () => {
-  router.push('/control/build-image');
+  router.push('/control/build-job');
 };
 const jumpToJobList = (type: JobStatus) => {
   const { statusToJobList } = useStoreData();

@@ -80,14 +80,14 @@ const deleteVisible = ref(false);
 const modalJobname = ref('');
 const router = useRouter();
 const viewDetail = (id: string) => {
-  router.push(`/control/build-image/build-log/${id}`);
+  router.push(`/control/build-job/build-log/${id}`);
 };
 const openReBuild = (id: string) => {
   modalJobname.value = id;
   rebuildVisible.value = true;
 };
 const reBuild = (id: string) => {
-  router.push(`/control/build-image/build-job/${id}`);
+  router.push(`/control/build-job/${id}`);
 };
 const openDeletejob = (id: string) => {
   modalJobname.value = id;

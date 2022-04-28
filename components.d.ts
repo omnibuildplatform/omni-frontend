@@ -7,6 +7,7 @@ declare module 'vue' {
     AppAside: typeof import('./src/components/AppAside.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
+    EditorComponent: typeof import('./src/components/EditorComponent.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCollapse: typeof import('element-plus/es')['ElCollapse']
     ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
@@ -18,10 +19,12 @@ declare module 'vue' {
     ElInput: typeof import('element-plus/es')['ElInput']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
+    ElMenuItemGroup: typeof import('element-plus/es')['ElMenuItemGroup']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElPagination: typeof import('element-plus/es')['ElPagination']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
@@ -30,6 +33,7 @@ declare module 'vue' {
     OmniEchart: typeof import('./src/components/OmniEchart.vue')['default']
     RouterTemplate: typeof import('./src/components/RouterTemplate.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']
+    VirtualList: typeof import('./src/components/VirtualList.vue')['default']
   }
 }
 

@@ -99,18 +99,20 @@ const getAllSelectData = () => {
         {{ selectAll.label }}
       </div>
     </div>
-    <el-scrollbar :height="height">
-      <div class="common-level-two-fz common-level-two-color" :style="{ width }">
-        <div v-for="defaultItem in _searchOption" :key="defaultItem.key" class="transfer m-b-8">
-          <div class="select-box" :class="defaultItem.selected && 'common-text-content-bg-color'" @click="clickCheckBox(defaultItem)">
-            <el-icon v-if="defaultItem.selected" :size="16" color="#ffffff"><check /></el-icon>
+    <div class="common-level-two-fz common-level-two-color" :style="{ width, height }">
+      <virtual-list :data="_searchOption">
+        <template #default="{ item }">
+          <div class="transfer">
+            <div class="select-box" :class="item.selected && 'common-text-content-bg-color'" @click="clickCheckBox(item)">
+              <el-icon v-if="item.selected" :size="16" color="#ffffff"><check /></el-icon>
+            </div>
+            <div :class="item.selected && 'common-level-one-color'">
+              {{ item.label }}
+            </div>
           </div>
-          <div :class="defaultItem.selected && 'common-level-one-color'">
-            {{ defaultItem.label }}
-          </div>
-        </div>
-      </div>
-    </el-scrollbar>
+        </template>
+      </virtual-list>
+    </div>
   </div>
 </template>
 <style scoped lang="scss">
