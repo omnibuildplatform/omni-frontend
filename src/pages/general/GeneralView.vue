@@ -32,7 +32,7 @@ const refresh = () => {
     if (total) {
       successRateOption.title.text = `${Math.round((succeed * 10000) / total) / 100}%`;
       successRateOption.series[0].data[0].value = succeed;
-      successRateOption.series[0].data[1].value = failed;
+      successRateOption.series[0].data[1].value = failed + stopped;
     } else {
       successRateOption.title.text = 0;
       successRateOption.series[0].data[0].value = 0;
