@@ -46,13 +46,29 @@ const save = () => {
 </script>
 <template>
   <div class="edit">
-    <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef" :default-config="toolbarConfig" />
+    <Toolbar class="bar" :editor="editorRef" :default-config="toolbarConfig" />
     <Editor v-model="valueHtml" style="height: 500px; overflow-y: hidden" :default-config="editorConfig" @on-created="handleCreated" />
   </div>
-  <el-button type="primary" @click="save()">Save</el-button>
+  <div class="save">
+    <el-button class="save-btn" type="primary" @click="save()">Save</el-button>
+  </div>
 </template>
 <style scoped lang="scss">
 .edit {
   border: 1px solid #ccc;
+}
+.bar {
+  border-bottom: 1px solid #ccc;
+  :deep(.w-e-bar) {
+    background-color: #e5e8f0;
+  }
+}
+.save {
+  margin-top: 24px;
+  display: flex;
+  justify-content: right;
+  &-btn {
+    width: 100px;
+  }
 }
 </style>
