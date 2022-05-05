@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import BuildJob from './BuildJob.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { createJob, getJobParam } from '@/api/api';
 import { AnyObj } from '@/shared/interface/interface';
 import BuildLeftTemplate from './build-left-template/BuildLeftTemplate.vue';
+import BuildIsoToSelect from './BuildIsoToSelect.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -47,7 +47,7 @@ const build = () => {
   <div class="build">
     <BuildLeftTemplate v-model:name="name" v-model:description="description" @build="build"></BuildLeftTemplate>
     <div class="build-right">
-      <BuildJob ref="buildjob" :default-value="buildDefult"></BuildJob>
+      <BuildIsoToSelect ref="buildjob"></BuildIsoToSelect>
     </div>
   </div>
 </template>

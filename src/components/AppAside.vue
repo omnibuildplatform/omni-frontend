@@ -8,19 +8,27 @@ const { selectAsideItem } = useStoreData();
     <el-menu-item index="/control/general-view">
       <span>General view</span>
     </el-menu-item>
-    <!-- <el-menu-item index="/control/build-image">
-      <span>Build Image</span>
-    </el-menu-item> -->
     <el-sub-menu index="1">
+      <template #title>
+        <span>Configure</span>
+      </template>
+      <el-menu-item index="/control/base-images">
+        <span>Base Images</span>
+      </el-menu-item>
+      <el-menu-item index="/control/kickstart-files">
+        <span>KickStart Files</span>
+      </el-menu-item>
+    </el-sub-menu>
+    <el-sub-menu index="2">
       <template #title>
         <span>Build</span>
       </template>
+      <el-menu-item index="/control/build-iso">
+        <span>Image from ISO</span>
+      </el-menu-item>
       <el-menu-item index="/control/build-job">
         <span>Image from Realese</span>
       </el-menu-item>
-      <!-- <el-menu-item index="/control/build-iso">
-        <span>Image from ISO</span>
-      </el-menu-item> -->
     </el-sub-menu>
     <el-menu-item index="/control/job-list">
       <span>Job List</span>

@@ -27,12 +27,14 @@ declare module 'vue' {
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     JobListTable: typeof import('./src/components/JobListTable.vue')['default']
     LoopImg: typeof import('./src/components/LoopImg.vue')['default']
     OmniEchart: typeof import('./src/components/OmniEchart.vue')['default']
     RouterTemplate: typeof import('./src/components/RouterTemplate.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']
+    TableTag: typeof import('./src/components/TableTag.vue')['default']
     VirtualList: typeof import('./src/components/VirtualList.vue')['default']
   }
 }

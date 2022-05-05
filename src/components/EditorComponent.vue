@@ -12,7 +12,7 @@ const valueHtml = ref('<p>hello</p>');
 // 模拟 ajax 异步获取内容
 onMounted(() => {
   setTimeout(() => {
-    valueHtml.value = '<pre><code class="language-typescript">## heiheiehh \nsdfewrdsfsd \nconst de asdasd\nclass a ===as</code></pre>';
+    valueHtml.value = '<pre><code class="language-bash">## heiheiehh \nsdfewrdsfsd \nconst de asdasd\nclass a ===as</code></pre>';
   }, 1500);
 });
 

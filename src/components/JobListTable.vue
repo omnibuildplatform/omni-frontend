@@ -3,8 +3,9 @@ import { useRouter } from 'vue-router';
 import { statusIconMap } from '@/shared/utils/map.const';
 import { computed, ref } from 'vue';
 import { deleteJob } from '@/api/api';
-import { JobListfilterConfig, JobListFilterType, JobStatus } from '@/shared/interface/interface';
+import { AnyObj, JobListfilterConfig, JobListFilterType, JobStatus } from '@/shared/interface/interface';
 import { useStoreData } from '@/shared/utils/login';
+import TableTag from './TableTag.vue';
 const props = defineProps({
   tableData: {
     type: Array,
@@ -19,8 +20,8 @@ const props = defineProps({
 // 表格过滤内容
 const tabFilterObj = ref({
   status: [],
-  arch: [],
   type: [],
+  arch: [],
 } as JobListfilterConfig);
 const getDefalutFilter = () => {
   // 跳转过滤展示
@@ -105,8 +106,31 @@ const emit = defineEmits(['refreshTable', 'selectionChange']);
 const getSvgName = (status: JobStatus) => {
   return statusIconMap[status];
 };
+const update = (e: AnyObj[]) => {
+  if (e) {
+    e.forEach((item) => {
+      tabFilterObj.value[item.key as JobListFilterType]?.splice(0);
+    });
+  }
+  emit('refreshTable', tabFilterObj.value);
+};
+const tableCol = {
+  status: {
+    key: 'status',
+    label: 'Status',
+  },
+  type: {
+    key: 'type',
+    label: 'Type',
+  },
+  arch: {
+    key: 'arch',
+    label: 'Architecture',
+  },
+};
 </script>
 <template>
+  <TableTag :table-col="tableCol" :model-value="tabFilterObj" @update:model-value="update($event)"></TableTag>
   <el-table :data="tableData" style="width: 100%" @filter-change="filterHandler" @selection-change="handleSelectionChange">
     <el-table-column v-if="model !== 'simple'" type="selection" width="55" />
     <el-table-column
