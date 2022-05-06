@@ -29,6 +29,7 @@ declare module 'vue' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     JobListTable: typeof import('./src/components/JobListTable.vue')['default']
     LoopImg: typeof import('./src/components/LoopImg.vue')['default']
     OmniEchart: typeof import('./src/components/OmniEchart.vue')['default']

@@ -94,3 +94,15 @@ export function stopJob(id: string) {
   const url = `/api/v2/images/stopJob/${id}`;
   return request.delete(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
+
+// 获取返回任务列表
+export function getKickStartList(data: AnyObj) {
+  const str = getUrlParam(data);
+  const url = `/api/v3/kickStart/list${str}`;
+  return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
+}
+// 删除任务
+export function updateKickStart(data: StringObj) {
+  const url = '/api/v3/kickStart/update';
+  return request.put(url, data, { global: true }).then((res: AxiosResponse) => res.data);
+}
