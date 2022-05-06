@@ -95,14 +95,20 @@ export function stopJob(id: string) {
   return request.delete(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
 
-// 获取返回任务列表
+// 获取返回KickStart列表
 export function getKickStartList(data: AnyObj) {
   const str = getUrlParam(data);
   const url = `/api/v3/kickStart/list${str}`;
   return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
-// 删除任务
+// 修改KickStart
 export function updateKickStart(data: StringObj) {
-  const url = '/api/v3/kickStart/update';
+  const url = `/api/v3/kickStart/${data.id}`;
   return request.put(url, data, { global: true }).then((res: AxiosResponse) => res.data);
+}
+
+// 删除KickStart
+export function deletekickStart(id: string) {
+  const url = `/api/v3/kickStart/${id}`;
+  return request.delete(url, { global: true }).then((res: AxiosResponse) => res.data);
 }

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { genFileId, UploadFile } from 'element-plus';
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus';
 import { getUserAuth } from '@/shared/utils/login';
-import { getKickStartList, updateKickStart } from '@/api/api';
+import { deletekickStart, getKickStartList, updateKickStart } from '@/api/api';
 import { AnyObj } from '@/shared/interface/interface';
 
 const upData = ref({
@@ -12,9 +12,20 @@ const upData = ref({
 });
 const browse = ref('');
 const tableData = ref([]);
+const total = ref(0);
+const currentPage = ref(1);
+const pageSize = ref(20);
+const handleSizeChange = (size: number) => {
+  pageSize.value = size;
+  getTableList();
+};
+const handleCurrentChange = (page: number) => {
+  currentPage.value = page;
+  getTableList();
+};
 const editor = ref<null | AnyObj>(null);
 // 上传文件接口
-const action = `${window.location.origin}/api/v3/kickStart/add`;
+const action = `${window.location.origin}/api/v3/kickStart`;
 // 使用token
 const { token } = getUserAuth();
 const headers = {
@@ -30,11 +41,13 @@ const upload = ref<UploadInstance>();
 // 获取列表数据
 const getTableList = () => {
   const query = {
-    offset: 0,
-    limit: 10,
+    offset: (currentPage.value - 1) * pageSize.value,
+    limit: pageSize.value,
   };
   getKickStartList(query).then((data) => {
     tableData.value = data?.data || [];
+    total.value = data.attach;
+    clearEditData();
   });
 };
 getTableList();
@@ -78,7 +91,9 @@ const save = (data: AnyObj) => {
   }
 };
 const deleteFile = (data: string) => {
-  data;
+  deletekickStart(data).then(() => {
+    getTableList();
+  });
 };
 const disableBtn = computed(() => {
   return !Boolean(upData.value.desc && upData.value.name && browse.value);
@@ -105,7 +120,7 @@ const handleChange = (files: UploadFile) => {
 
 <template>
   <div class="main">
-    <h3 class="main-header m-b-24">KickStartFiles</h3>
+    <h3 class="main-header m-b-24">KickStart Files</h3>
     <div class="main-body common-content-bg-color">
       <div class="main-body-create">
         <span>Name</span>
@@ -127,6 +142,7 @@ const handleChange = (files: UploadFile) => {
           :data="upData"
           :on-exceed="handleExceed"
           :on-change="handleChange"
+          :on-success="getTableList"
           :auto-upload="false"
         >
           <template #trigger>
@@ -169,6 +185,17 @@ const handleChange = (files: UploadFile) => {
             </template>
           </el-table-column>
         </el-table>
+        <div class="flex flex-center m-t-24">
+          <el-pagination
+            v-model:currentPage="currentPage"
+            v-model:page-size="pageSize"
+            :page-sizes="[20, 50, 100]"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
+        </div>
       </div>
       <div class="main-body-editer">
         <EditorComponent :id="editData.id" ref="editor" :data="editData.data" />
