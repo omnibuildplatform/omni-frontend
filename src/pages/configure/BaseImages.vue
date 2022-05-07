@@ -140,9 +140,9 @@ const handleCurrentChange = (page: number) => {
                 >
                   Save
                 </a>
-                <a class="app-text-btn m-r-16" @click="editImg(scope.row)">Edit</a>
+                <a v-else class="app-text-btn m-r-16" @click="editImg(scope.row)">Edit</a>
 
-                <a class="app-text-btn" :headers="headers" @click="deleteImg(scope.row.ID)">Delete</a>
+                <a class="app-text-btn" @click="deleteImg(scope.row.ID)">Delete</a>
               </div>
             </template>
           </el-table-column>
