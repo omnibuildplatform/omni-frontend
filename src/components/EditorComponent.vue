@@ -2,7 +2,9 @@
 import { onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { IToolbarConfig } from '@wangeditor/editor';
+import { i18nChangeLanguage } from '@wangeditor/editor';
 
+i18nChangeLanguage('en');
 const props = defineProps({
   data: {
     type: String,

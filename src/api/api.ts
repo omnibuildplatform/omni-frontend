@@ -106,6 +106,11 @@ export function updateKickStart(data: StringObj) {
   const url = `/api/v3/kickStart/${data.id}`;
   return request.put(url, data, { global: true }).then((res: AxiosResponse) => res.data);
 }
+// 获取KickStart详情
+export function getKickStart(id: string) {
+  const url = `/api/v3/kickStart/${id}`;
+  return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
+}
 
 // 删除KickStart
 export function deletekickStart(id: string) {
@@ -119,6 +124,7 @@ export function getbaseImagesList(data: AnyObj) {
   const url = `/api/v3/baseImages/list${str}`;
   return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
+
 // 修改BaseImages
 export function updatebaseImages(data: StringObj) {
   const url = `/api/v3/baseImages/${data.id}`;
@@ -133,5 +139,17 @@ export function deletebaseImages(id: string) {
 
 export function postbaseImages(data: AnyObj) {
   const url = '/api/v3/baseImages/import';
+  return request.post(url, data, { global: true }).then((res: AxiosResponse) => res.data);
+}
+
+// 获取KickStart和images数据
+export function getImagesAndKickStart() {
+  const url = '/api/v3/getImagesAndKickStart';
+  return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
+}
+
+// 以ISO创建任务
+export function buildFromIso(data: AnyObj) {
+  const url = '/api/v3/images/buildFromIso';
   return request.post(url, data, { global: true }).then((res: AxiosResponse) => res.data);
 }

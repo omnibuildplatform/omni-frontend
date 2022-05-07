@@ -53,6 +53,10 @@ export const routes: RouteRecordRaw[] = [
         component: BuildIso,
       },
       {
+        path: 'build-iso/build-log/:id',
+        component: BuildLog,
+      },
+      {
         path: 'job-list',
         component: JobList,
       },

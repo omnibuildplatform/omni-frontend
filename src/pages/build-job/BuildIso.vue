@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { createJob, getJobParam } from '@/api/api';
+import { buildFromIso, getJobParam } from '@/api/api';
 import { AnyObj } from '@/shared/interface/interface';
 import BuildLeftTemplate from './build-left-template/BuildLeftTemplate.vue';
 import BuildIsoToSelect from './BuildIsoToSelect.vue';
@@ -35,10 +35,10 @@ const build = () => {
   const data = buildjob?.value?.build();
   data.label = name.value;
   data.desc = description.value;
-  createJob(data).then((res) => {
+  buildFromIso(data).then((res) => {
     if (res?.data?.JobName) {
       // 构建成功跳转详情
-      router.push(`/control/build-job/build-log/${res.data.JobName}`);
+      router.push(`/control/build-iso/build-log/${res.data.JobName}`);
     }
   });
 };
