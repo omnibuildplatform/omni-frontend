@@ -112,3 +112,26 @@ export function deletekickStart(id: string) {
   const url = `/api/v3/kickStart/${id}`;
   return request.delete(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
+
+// 获取返回BaseImages列表
+export function getbaseImagesList(data: AnyObj) {
+  const str = getUrlParam(data);
+  const url = `/api/v3/baseImages/list${str}`;
+  return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
+}
+// 修改BaseImages
+export function updatebaseImages(data: StringObj) {
+  const url = `/api/v3/baseImages/${data.id}`;
+  return request.put(url, data, { global: true }).then((res: AxiosResponse) => res.data);
+}
+
+// 删除BaseImages
+export function deletebaseImages(id: string) {
+  const url = `/api/v3/baseImages/${id}`;
+  return request.delete(url, { global: true }).then((res: AxiosResponse) => res.data);
+}
+
+export function postbaseImages(data: AnyObj) {
+  const url = '/api/v3/baseImages/import';
+  return request.post(url, data, { global: true }).then((res: AxiosResponse) => res.data);
+}
