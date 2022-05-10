@@ -7,6 +7,7 @@ declare module 'vue' {
     AppAside: typeof import('./src/components/AppAside.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
+    DialogModal: typeof import('./src/components/DialogModal.vue')['default']
     EditorComponent: typeof import('./src/components/EditorComponent.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCollapse: typeof import('element-plus/es')['ElCollapse']
