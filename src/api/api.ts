@@ -3,7 +3,10 @@ import type { AxiosResponse } from '@/shared/axios';
 import { AnyObj, StringObj } from '@/shared/interface/interface';
 import { isCheckEmpty } from '@/shared/utils/common';
 
-function getUrlParam(param: AnyObj): string {
+function getUrlParam(param: AnyObj | undefined): string {
+  if (!param) {
+    return '';
+  }
   return Object.keys(param)?.reduce((pre, next) => {
     if (!isCheckEmpty(param[next], true)) {
       pre += pre ? '&' : '?';
@@ -64,8 +67,9 @@ export function getHistoryList(data: AnyObj) {
 }
 
 // 获取单个任务详情
-export function getJobDetail(id: string) {
-  const url = `/api/v2/images/getOne/${id}`;
+export function getJobDetail(id: string, param?: AnyObj) {
+  const str = getUrlParam(param);
+  const url = `/api/v2/images/getOne/${id}${str}`;
   return request.get(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
 
@@ -90,8 +94,9 @@ export function deleteJob(ids: string[]) {
 }
 
 // 停止任务
-export function stopJob(id: string) {
-  const url = `/api/v2/images/stopJob/${id}`;
+export function stopJob(id: string, param?: AnyObj) {
+  const str = getUrlParam(param);
+  const url = `/api/v2/images/stopJob/${id}${str}`;
   return request.delete(url, { global: true }).then((res: AxiosResponse) => res.data);
 }
 

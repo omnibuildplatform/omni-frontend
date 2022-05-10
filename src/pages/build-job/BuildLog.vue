@@ -46,7 +46,13 @@ const download = () => {
   }
 };
 const stop = () => {
-  stopJob(id).then(() => {
+  const fromIso = route?.fullPath?.includes('/build-iso/');
+  const param = fromIso
+    ? {
+        jobtype: 'buildimagefromiso',
+      }
+    : {};
+  stopJob(id, param).then(() => {
     detail.value.Status = 'stopped';
   });
 };

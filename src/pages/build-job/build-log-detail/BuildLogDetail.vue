@@ -49,7 +49,13 @@ const calcTime = (data: StringObj) => {
 };
 let timer: NodeJS.Timeout;
 const queryJob = (type?: string) => {
-  getJobDetail(id).then((res) => {
+  const fromIso = route?.fullPath?.includes('/build-iso/');
+  const param = fromIso
+    ? {
+        jobtype: 'buildimagefromiso',
+      }
+    : {};
+  getJobDetail(id, param).then((res) => {
     if (res.data) {
       const { data } = res;
       const { steps = [] } = data;
