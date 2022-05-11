@@ -102,11 +102,11 @@ const handleCurrentChange = (page: number) => {
         </div>
         <span>Url</span>
         <div class="main-body-create-input">
-          <el-input v-model="upData.url" maxlength="64" placeholder="Please input" />
+          <el-input v-model="upData.url" maxlength="128" placeholder="Please input" />
         </div>
         <span>Arch</span>
         <div class="main-body-create-input">
-          <el-input v-model="upData.arch" maxlength="64" placeholder="Please input" />
+          <el-input v-model="upData.arch" maxlength="128" placeholder="Please input" />
         </div>
         <el-button type="primary" :disabled="disableBtn" @click="importImages()">Import Images</el-button>
       </div>
