@@ -58,11 +58,9 @@ const importImages = () => {
     upData.value.checksum = '';
   });
 };
-// 刷新操作
 const refreshData = () => {
   getTableList();
 };
-// 删除操作
 const deleteImg = (data: string) => {
   deletebaseImages(data).then(() => {
     getTableList();
@@ -112,7 +110,7 @@ const handleCurrentChange = (page: number) => {
       </div>
       <div class="main-body-table m-t-16 m-b-24">
         <div class="main-body-table-btn">
-          <el-icon :size="25" class="m-r-16" @click="refreshData()">
+          <el-icon :size="25" @click="refreshData()">
             <refresh class="app-text-btn" />
           </el-icon>
         </div>
@@ -143,7 +141,7 @@ const handleCurrentChange = (page: number) => {
               <span v-else>{{ scope.row.Checksum }}</span>
             </template></el-table-column
           >
-          <el-table-column label="Operation">
+          <el-table-column label="Operation" width="158">
             <template #default="scope">
               <div class="operate">
                 <a
