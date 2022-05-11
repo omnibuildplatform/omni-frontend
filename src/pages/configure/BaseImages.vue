@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue';
 import { getbaseImagesList, updatebaseImages, deletebaseImages, postbaseImages } from '@/api/api';
 import { AnyObj } from '@/shared/interface/interface';
+import { Refresh } from '@element-plus/icons-vue';
+
 const upData = ref({
   name: '',
   desc: '',
@@ -49,7 +51,16 @@ getTableList();
 const importImages = () => {
   postbaseImages(upData.value).then(() => {
     getTableList();
+    upData.value.name = '';
+    upData.value.arch = '';
+    upData.value.desc = '';
+    upData.value.url = '';
+    upData.value.checksum = '';
   });
+};
+// 刷新操作
+const refreshData = () => {
+  getTableList();
 };
 // 删除操作
 const deleteImg = (data: string) => {
@@ -83,28 +94,31 @@ const handleCurrentChange = (page: number) => {
         </div>
         <span>Desc</span>
         <div class="main-body-create-input">
-          <el-input v-model="upData.desc" maxlength="64" placeholder="Please input" />
+          <el-input v-model="upData.desc" maxlength="512" placeholder="Please input" />
         </div>
         <span>Checksum</span>
         <div class="main-body-create-input">
-          <el-input v-model="upData.checksum" maxlength="64" placeholder="Please input" />
+          <el-input v-model="upData.checksum" maxlength="256" placeholder="Please input SHA-256" />
         </div>
         <span>Url</span>
         <div class="main-body-create-input">
-          <el-input v-model="upData.url" maxlength="64" placeholder="Please input" />
+          <el-input v-model="upData.url" maxlength="128" placeholder="Please input" />
         </div>
         <span>Arch</span>
         <div class="main-body-create-input">
-          <el-input v-model="upData.arch" maxlength="64" placeholder="Please input" />
+          <el-input v-model="upData.arch" maxlength="128" placeholder="Please input" />
         </div>
-
-        <el-button type="primary" :disabled="disableBtn" :headers="headers" @click="importImages()">Import Images</el-button>
+        <el-button type="primary" :disabled="disableBtn" @click="importImages()">Import Images</el-button>
       </div>
-
-      <div class="main-body-table m-t-40 m-b-24">
+      <div class="main-body-table m-t-16 m-b-24">
+        <div class="main-body-table-btn">
+          <el-icon :size="25" class="m-r-16" @click="refreshData()">
+            <refresh class="app-text-btn" />
+          </el-icon>
+        </div>
         <el-table :data="tableData" style="width: 100%">
           <el-table-column show-overflow-tooltip prop="ID" label="ID" />
-
+          <el-table-column show-overflow-tooltip prop="Status" label="Status" />
           <el-table-column show-overflow-tooltip prop="Name" label="Name"
             ><template #default="scope">
               <el-input v-if="scope.row.edit" v-model="scope.row.Name"> </el-input>
@@ -134,14 +148,13 @@ const handleCurrentChange = (page: number) => {
               <div class="operate">
                 <a
                   v-if="scope.row.edit"
-                  class="m-r-16"
+                  class="m-r-8"
                   :class="scope.row.Desc && scope.row.Name ? 'app-text-btn' : 'app-disable-text-btn'"
                   @click="save(scope.row)"
                 >
                   Save
                 </a>
-                <a v-else class="app-text-btn m-r-16" @click="editImg(scope.row)">Edit</a>
-
+                <a v-else class="app-text-btn m-r-8" @click="editImg(scope.row)">Edit</a>
                 <a class="app-text-btn" @click="deleteImg(scope.row.ID)">Delete</a>
               </div>
             </template>
@@ -184,6 +197,16 @@ const handleCurrentChange = (page: number) => {
       }
       &-btn {
         margin-left: 16px;
+      }
+    }
+    &-table {
+      &-btn {
+        text-align: right;
+        padding-bottom: 8px;
+
+        .app-text-btn {
+          border: 1px solid #adada5;
+        }
       }
     }
   }
