@@ -62,7 +62,6 @@ const importImages = () => {
 const refreshData = () => {
   getTableList();
 };
-// 删除操作
 const deleteImg = (data: string) => {
   deletebaseImages(data).then(() => {
     getTableList();
