@@ -112,7 +112,7 @@ const handleCurrentChange = (page: number) => {
       </div>
       <div class="main-body-table m-t-16 m-b-24">
         <div class="main-body-table-btn">
-          <el-icon :size="25" class="m-r-16" @click="refreshData()">
+          <el-icon :size="25" @click="refreshData()">
             <refresh class="app-text-btn" />
           </el-icon>
         </div>
