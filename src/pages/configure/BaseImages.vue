@@ -143,7 +143,7 @@ const handleCurrentChange = (page: number) => {
               <span v-else>{{ scope.row.Checksum }}</span>
             </template></el-table-column
           >
-          <el-table-column label="Operation">
+          <el-table-column label="Operation" width="158">
             <template #default="scope">
               <div class="operate">
                 <a
