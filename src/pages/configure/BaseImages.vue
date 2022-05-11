@@ -58,7 +58,6 @@ const importImages = () => {
     upData.value.checksum = '';
   });
 };
-// 刷新操作
 const refreshData = () => {
   getTableList();
 };
