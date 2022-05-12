@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import { getbaseImagesList, updatebaseImages, deletebaseImages, postbaseImages } from '@/api/api';
 import { AnyObj } from '@/shared/interface/interface';
 import { Refresh } from '@element-plus/icons-vue';
-
+const dialog = ref<null | AnyObj>(null);
 const upData = ref({
   name: '',
   desc: '',
@@ -61,6 +61,12 @@ const importImages = () => {
 const refreshData = () => {
   getTableList();
 };
+const openDelete = (data: string) => {
+  dialog?.value?.open({
+    content: 'Are you sure you want to delete this data?',
+    callback: () => deleteImg(data),
+  });
+};
 const deleteImg = (data: string) => {
   deletebaseImages(data).then(() => {
     getTableList();
@@ -82,6 +88,7 @@ const handleCurrentChange = (page: number) => {
 </script>
 
 <template>
+  <DialogModal ref="dialog"></DialogModal>
   <div class="main">
     <h3 class="main-header m-b-24">Base Images</h3>
     <div class="main-body common-content-bg-color">
@@ -153,7 +160,7 @@ const handleCurrentChange = (page: number) => {
                   Save
                 </a>
                 <a v-else class="app-text-btn m-r-8" @click="editImg(scope.row)">Edit</a>
-                <a class="app-text-btn" @click="deleteImg(scope.row.ID)">Delete</a>
+                <a class="app-text-btn" @click="openDelete(scope.row.ID)">Delete</a>
               </div>
             </template>
           </el-table-column>

@@ -6,6 +6,7 @@ import { getUserAuth } from '@/shared/utils/login';
 import { deletekickStart, getKickStartList, updateKickStart } from '@/api/api';
 import { AnyObj } from '@/shared/interface/interface';
 
+const dialog = ref<null | AnyObj>(null);
 const upData = ref({
   name: '',
   desc: '',
@@ -90,6 +91,12 @@ const save = (data: AnyObj) => {
     });
   }
 };
+const openDelete = (data: string) => {
+  dialog?.value?.open({
+    content: 'Are you sure you want to delete this data?',
+    callback: () => deleteFile(data),
+  });
+};
 const deleteFile = (data: string) => {
   deletekickStart(data).then(() => {
     getTableList();
@@ -119,6 +126,7 @@ const handleChange = (files: UploadFile) => {
 </script>
 
 <template>
+  <DialogModal ref="dialog"></DialogModal>
   <div class="main">
     <h3 class="main-header m-b-24">KickStart Files</h3>
     <div class="main-body common-content-bg-color">
@@ -180,7 +188,7 @@ const handleChange = (files: UploadFile) => {
                   Save
                 </a>
                 <a v-else class="app-text-btn m-r-16" @click="editFile(scope.row)">Edit</a>
-                <a class="app-text-btn" @click="deleteFile(scope.row.ID)">Delete</a>
+                <a class="app-text-btn" @click="openDelete(scope.row.ID)">Delete</a>
               </div>
             </template>
           </el-table-column>
