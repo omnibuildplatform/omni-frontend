@@ -90,7 +90,7 @@ const queryJob = (type?: string) => {
         } else {
           logDatas.value = _data;
         }
-        complete(data.state);
+        complete(data.state, res.attach);
       }
       handleChange();
     }
@@ -106,13 +106,14 @@ if (id) {
 const percentageParam = reactive({
   percentage: 0,
   status: 'running',
+  url: '',
 });
 const addTime = () => {
   if (percentageParam.percentage < 99) {
     percentageParam.percentage = Math.round(percentageParam.percentage * 10 + 1) / 10;
   }
 };
-const complete = (status: string) => {
+const complete = (status: string, url?: string) => {
   addTime();
   const step = Math.floor(100 / logDatas.value.length);
   logDatas.value.forEach((item, index) => {
@@ -123,6 +124,7 @@ const complete = (status: string) => {
   if (jobStatusMap[status] === 'succeed') {
     timer && clearInterval(timer);
     percentageParam.percentage = 100;
+    percentageParam.url = url || '';
   }
   percentageParam.status = jobStatusMap[status];
   emit('complete', percentageParam);

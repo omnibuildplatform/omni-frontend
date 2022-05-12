@@ -35,6 +35,9 @@ const complete = (e: AnyObj) => {
   if (e.status && detail.value.Status !== e.status) {
     detail.value.Status = e.status;
   }
+  if (e.url) {
+    detail.value.DownloadUrl = e.url;
+  }
 };
 const download = () => {
   if (detail.value.Status === 'succeed') {
