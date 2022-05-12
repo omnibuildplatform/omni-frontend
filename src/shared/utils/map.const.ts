@@ -10,5 +10,6 @@ export const statusIconMap: statusIconMapConfig = {
   failed: 'tab-failed',
   stopped: 'tab-stopped',
   start: 'tab-waiting',
+  created: 'tab-waiting',
   waiting: 'tab-waiting',
 };

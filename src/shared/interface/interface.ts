@@ -16,7 +16,7 @@ export interface CommonOptionsItem {
   selected?: boolean;
 }
 
-export type JobStatus = 'succeed' | 'failed' | 'waiting' | 'running' | 'start' | 'stopped';
+export type JobStatus = 'succeed' | 'failed' | 'waiting' | 'running' | 'start' | 'stopped' | 'created';
 export interface LogDataItems {
   id: string;
   label: string;
