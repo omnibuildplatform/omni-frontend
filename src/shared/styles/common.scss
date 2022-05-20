@@ -33,6 +33,12 @@
 .m-t-40 {
     margin-top: 40px;
 }
+.m-r-16 {
+    margin-right: 16px;
+}
+.m-r-8 {
+    margin-right: 8px;
+}
 
 .text-center {
     text-align: center;
@@ -114,6 +120,11 @@
     width: 100%;
     padding: 20px 24px;
     @include background_color('bg-color1');
+}
+
+// 全局修改表格表头背景色
+.el-table th {
+    background-color: #e5e8f0 !important;
 }
 
   

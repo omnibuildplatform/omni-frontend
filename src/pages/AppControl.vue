@@ -1,6 +1,6 @@
 <script setup lang="ts"></script>
 <template>
-  <div class="flex">
+  <div class="control">
     <AppAside />
     <div class="app-view-block">
       <div style="overflow-y: auto">
@@ -9,3 +9,9 @@
     </div>
   </div>
 </template>
+<style scoped lang="scss">
+.control {
+  display: grid;
+  grid-template-columns: 200px auto;
+}
+</style>

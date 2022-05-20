@@ -7,6 +7,7 @@ import { reactive, ref } from 'vue';
 import { AnyObj, JobStatus } from '@/shared/interface/interface';
 import { cloneDeep } from 'lodash';
 import { useStoreData } from '@/shared/utils/login';
+import { ArrowDown } from '@element-plus/icons-vue';
 
 const router = useRouter();
 const successRateOption = reactive(cloneDeep(SuccessRateOption) as AnyObj);
@@ -32,7 +33,7 @@ const refresh = () => {
     if (total) {
       successRateOption.title.text = `${Math.round((succeed * 10000) / total) / 100}%`;
       successRateOption.series[0].data[0].value = succeed;
-      successRateOption.series[0].data[1].value = failed;
+      successRateOption.series[0].data[1].value = failed + stopped;
     } else {
       successRateOption.title.text = 0;
       successRateOption.series[0].data[0].value = 0;
@@ -44,8 +45,11 @@ const refresh = () => {
   });
 };
 refresh();
-const goToBuild = () => {
-  router.push('/control/build-image');
+const goToRealese = () => {
+  router.push('/control/build-job');
+};
+const goToISO = () => {
+  router.push('/control/build-iso');
 };
 const jumpToJobList = (type: JobStatus) => {
   const { statusToJobList } = useStoreData();
@@ -74,7 +78,17 @@ const jumpToJobList = (type: JobStatus) => {
       </div>
     </div>
     <div class="m-t-40 general-neck">
-      <el-button class="general-neck-btn" type="primary" @click="goToBuild()">新建任务</el-button>
+      <el-dropdown>
+        <el-button type="primary" class="general-neck-btn text-center">
+          新建任务<el-icon class="el-icon--right"><arrow-down /></el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="goToISO()">Image from ISO</el-dropdown-item>
+            <el-dropdown-item @click="goToRealese()">Image from Realese</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
     <div class="m-t-40 m-b-24 general-body">
       <p class="m-b-16 general-body-title">最近任务</p>

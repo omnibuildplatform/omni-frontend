@@ -3,8 +3,11 @@ import { useRouter } from 'vue-router';
 import { statusIconMap } from '@/shared/utils/map.const';
 import { computed, ref } from 'vue';
 import { deleteJob } from '@/api/api';
-import { JobListfilterConfig, JobListFilterType, JobStatus } from '@/shared/interface/interface';
+import { AnyObj, JobListfilterConfig, JobListFilterType, JobStatus } from '@/shared/interface/interface';
 import { useStoreData } from '@/shared/utils/login';
+import TableTag from './TableTag.vue';
+import DialogModal from './DialogModal.vue';
+import { dateFormat } from '../shared/utils/common';
 const props = defineProps({
   tableData: {
     type: Array,
@@ -15,12 +18,13 @@ const props = defineProps({
     default: 'simple',
   },
 });
+const dialog = ref<null | AnyObj>(null);
 
 // 表格过滤内容
 const tabFilterObj = ref({
   status: [],
-  arch: [],
   type: [],
+  arch: [],
 } as JobListfilterConfig);
 const getDefalutFilter = () => {
   // 跳转过滤展示
@@ -74,24 +78,32 @@ const getHelpTips = (status: string) => {
   }
   return 'The job has failed or stopped. Click 【Rebuild】 to rebuild';
 };
-const rebuildVisible = ref(false);
-const deleteVisible = ref(false);
-// modal弹窗使用的id
-const modalJobname = ref('');
 const router = useRouter();
-const viewDetail = (id: string) => {
-  router.push(`/control/build-image/build-log/${id}`);
+const viewDetail = (data: AnyObj) => {
+  if (data?.JobType === 'buildimagefromiso') {
+    router.push(`/control/build-iso/build-log/${data.JobName}`);
+  } else {
+    router.push(`/control/build-job/build-log/${data.JobName}`);
+  }
 };
-const openReBuild = (id: string) => {
-  modalJobname.value = id;
-  rebuildVisible.value = true;
+const openReBuild = (data: AnyObj) => {
+  dialog?.value?.open({
+    content: 'Click 【Rebuild】 to rebuild a new job. You can either keep the original build parameters or reconfigure the build parameters.',
+    callback: () => reBuild(data),
+  });
 };
-const reBuild = (id: string) => {
-  router.push(`/control/build-image/build-job/${id}`);
+const reBuild = (data: AnyObj) => {
+  if (data?.JobType === 'buildimagefromiso') {
+    router.push(`/control/build-iso/${data.JobName}`);
+  } else {
+    router.push(`/control/build-job/${data.JobName}`);
+  }
 };
 const openDeletejob = (id: string) => {
-  modalJobname.value = id;
-  deleteVisible.value = true;
+  dialog?.value?.open({
+    content: 'Clicking 【delete】 will delete this build job and its successfully built image file. Are you sure you want to delete this job?',
+    callback: () => deletejob(id),
+  });
 };
 const deletejob = (id: string) => {
   deleteJob([id]).then(() => {
@@ -105,8 +117,32 @@ const emit = defineEmits(['refreshTable', 'selectionChange']);
 const getSvgName = (status: JobStatus) => {
   return statusIconMap[status];
 };
+const update = (e: AnyObj[]) => {
+  if (e) {
+    e.forEach((item) => {
+      tabFilterObj.value[item.key as JobListFilterType]?.splice(0);
+    });
+  }
+  emit('refreshTable', tabFilterObj.value);
+};
+const tableCol = {
+  status: {
+    key: 'status',
+    label: 'Status',
+  },
+  type: {
+    key: 'type',
+    label: 'Type',
+  },
+  arch: {
+    key: 'arch',
+    label: 'Architecture',
+  },
+};
 </script>
 <template>
+  <DialogModal ref="dialog"></DialogModal>
+  <TableTag :table-col="tableCol" :model-value="tabFilterObj" @update:model-value="update($event)"></TableTag>
   <el-table :data="tableData" style="width: 100%" @filter-change="filterHandler" @selection-change="handleSelectionChange">
     <el-table-column v-if="model !== 'simple'" type="selection" width="55" />
     <el-table-column
@@ -147,11 +183,15 @@ const getSvgName = (status: JobStatus) => {
     <el-table-column show-overflow-tooltip prop="JobName" label="ID" />
     <el-table-column show-overflow-tooltip prop="JobLabel" label="Name" />
     <el-table-column show-overflow-tooltip prop="JobDesc" label="Description" />
-    <el-table-column show-overflow-tooltip prop="CreateTime" label="Create Time" />
+    <el-table-column show-overflow-tooltip prop="CreateTime" label="Create Time">
+      <template #default="scope">
+        <span>{{ dateFormat(scope.row.CreateTime) }}</span>
+      </template>
+    </el-table-column>
     <el-table-column label="Operate">
       <template #default="scope">
         <div>
-          <a class="app-text-btn build-btn" @click="openReBuild(scope.row.JobName)">rebuild</a>
+          <a class="app-text-btn build-btn" @click="openReBuild(scope.row)">rebuild</a>
           <a class="app-text-btn" @click="openDeletejob(scope.row.JobName)">delete</a>
         </div>
       </template>
@@ -172,55 +212,11 @@ const getSvgName = (status: JobStatus) => {
     <el-table-column label="Detail">
       <template #default="scope">
         <div>
-          <a class="app-text-btn" @click="viewDetail(scope.row.JobName)">View detail</a>
+          <a class="app-text-btn" @click="viewDetail(scope.row)">View detail</a>
         </div>
       </template>
     </el-table-column>
   </el-table>
-  <el-dialog v-model="rebuildVisible" title="Tips" width="30%" draggable center>
-    <span>Click 【Rebuild】 to rebuild a new job. You can either keep the original build parameters or reconfigure the build parameters.</span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button
-          type="primary"
-          @click="
-            rebuildVisible = false;
-            reBuild(modalJobname);
-          "
-          >Confirm
-        </el-button>
-        <el-button
-          @click="
-            rebuildVisible = false;
-            modalJobname = '';
-          "
-          >Cancel</el-button
-        >
-      </span>
-    </template>
-  </el-dialog>
-  <el-dialog v-model="deleteVisible" title="Tips" width="30%" draggable center>
-    <span>Clicking 【delete】 will delete this build job and its successfully built image file. Are you sure you want to delete this job?</span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button
-          type="primary"
-          @click="
-            deleteVisible = false;
-            deletejob(modalJobname);
-          "
-          >Confirm</el-button
-        >
-        <el-button
-          @click="
-            deleteVisible = false;
-            modalJobname = '';
-          "
-          >Cancel
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
 </template>
 <style scoped lang="scss">
 .tab-status-icon {

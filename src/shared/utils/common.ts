@@ -81,5 +81,26 @@ export function isCheckEmpty(data: any, strict = false): boolean {
   if (strict) {
     return strictArr.includes(data);
   }
-  return [...strictArr, '', false].includes(data);
+  return [...strictArr, 0, false].includes(data);
+}
+
+/**
+ * 格式化时间
+ */
+export function dateFormat(time: string) {
+  const date = new Date(time);
+  if (date.getTime() < 0) {
+    return '--';
+  }
+  const Year = date.getFullYear();
+  const Month = `${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+  const Day = `${date.getDate().toString().padStart(2, '0')}`;
+  const Hour = `${date.getHours().toString().padStart(2, '0')}`;
+  const Minute = `${date.getMinutes().toString().padStart(2, '0')}`;
+  const Second = `${date.getSeconds().toString().padStart(2, '0')}`;
+  const GMTt = -date.getTimezoneOffset() / 60;
+  const GMTt_symble = GMTt > 0 ? '+' : '-';
+  const GMTs = `${GMTt_symble}${Math.abs(GMTt).toString().padStart(2, '0')}00`;
+  const formatTime = `${Year}-${Month}-${Day} ${Hour}:${Minute}:${Second} UTC${GMTs}`;
+  return formatTime;
 }

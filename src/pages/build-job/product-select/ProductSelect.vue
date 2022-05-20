@@ -14,8 +14,8 @@ defineProps({
     default: 'icon',
   },
   options: {
-    type: Array,
-    default: () => [],
+    type: Array as () => any[],
+    default: () => [] as any[],
   },
   value: {
     type: String,
@@ -40,7 +40,7 @@ const selectClass: StringObj = {
 <template>
   <div :class="selectClass[type]" :style="{ width }">
     <el-select popper-class="block-popper" :popper-append-to-body="false" :model-value="value" placeholder="Please select" @change="change">
-      <el-option v-for="item in options" :key="item" :label="item" :value="item"> </el-option>
+      <el-option v-for="item in options" :key="item?.key || item" :label="item?.label || item" :value="item?.value || item"> </el-option>
     </el-select>
   </div>
 </template>

@@ -77,7 +77,7 @@ const openDeleteModal = () => {
       </span>
     </div>
     <JobListTable model="complex" :table-data="tableData" @refresh-table="filterTab($event)" @selection-change="selectionChange($event)"></JobListTable>
-    <div class="pagination">
+    <div class="flex flex-center pagination">
       <el-pagination
         v-model:currentPage="currentPage"
         v-model:page-size="pageSize"

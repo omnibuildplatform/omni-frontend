@@ -20,6 +20,12 @@ defineProps({
 const emit = defineEmits(['complete']);
 const route = useRoute();
 const id = (route.params.id || '') as string;
+const fromIso = route?.fullPath?.includes('/build-iso/');
+const param = fromIso
+  ? {
+      jobtype: 'buildimagefromiso',
+    }
+  : {};
 const statusMap: AnyObj = {
   StepStart: 'waiting',
   StepCreated: 'waiting',
@@ -49,7 +55,7 @@ const calcTime = (data: StringObj) => {
 };
 let timer: NodeJS.Timeout;
 const queryJob = (type?: string) => {
-  getJobDetail(id).then((res) => {
+  getJobDetail(id, param).then((res) => {
     if (res.data) {
       const { data } = res;
       const { steps = [] } = data;
@@ -84,7 +90,7 @@ const queryJob = (type?: string) => {
         } else {
           logDatas.value = _data;
         }
-        complete(data.state);
+        complete(data.state, res.attach);
       }
       handleChange();
     }
@@ -100,13 +106,14 @@ if (id) {
 const percentageParam = reactive({
   percentage: 0,
   status: 'running',
+  url: '',
 });
 const addTime = () => {
   if (percentageParam.percentage < 99) {
     percentageParam.percentage = Math.round(percentageParam.percentage * 10 + 1) / 10;
   }
 };
-const complete = (status: string) => {
+const complete = (status: string, url?: string) => {
   addTime();
   const step = Math.floor(100 / logDatas.value.length);
   logDatas.value.forEach((item, index) => {
@@ -117,6 +124,7 @@ const complete = (status: string) => {
   if (jobStatusMap[status] === 'succeed') {
     timer && clearInterval(timer);
     percentageParam.percentage = 100;
+    percentageParam.url = url || '';
   }
   percentageParam.status = jobStatusMap[status];
   emit('complete', percentageParam);
@@ -130,16 +138,16 @@ const handleChange = () => {
     // 值加载过一遍不用加载第二遍
     if (findOne && findOne.uuid !== 'end') {
       const params = {
-        id,
         stepID: key,
         uuid: findOne.uuid,
+        ...param,
       };
-      getJobStepDetail(params).then((res) => {
+      getJobStepDetail(id, params).then((res) => {
         const { code, data } = res;
         if (code === 200) {
           const { log, stopOK, uuid } = data;
           findOne.uuid = uuid;
-          const arr = (log && log.split('\n')) || [];
+          const arr = (log && log.split(/[\n|\r]/)) || [];
           findOne.value = findOne.value.concat(arr);
           if (stopOK === 'true') {
             // 成功后加载完日志，再次加载不用请求
