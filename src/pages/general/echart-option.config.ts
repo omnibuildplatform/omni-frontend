@@ -19,11 +19,6 @@ export const SuccessRateOption: EChartsOption = {
       name: 'Access From',
       type: 'pie',
       radius: ['75%', '95%'],
-      itemStyle: {
-        borderRadius: 5,
-        borderColor: '#fff',
-        borderWidth: 0.5,
-      },
       emphasis: {
         label: {
           show: false,

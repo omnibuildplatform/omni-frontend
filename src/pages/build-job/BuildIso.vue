@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import BuildJob from './BuildJob.vue';
 import { useRoute, useRouter } from 'vue-router';
-import { createJob, getJobParam } from '@/api/api';
+import { buildFromIso, getJobParam } from '@/api/api';
 import { AnyObj } from '@/shared/interface/interface';
 import BuildLeftTemplate from './build-left-template/BuildLeftTemplate.vue';
+import BuildIsoToSelect from './BuildIsoToSelect.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -12,10 +12,9 @@ const id = (route.params.id || '') as string;
 const name = ref('');
 const description = ref('');
 const buildDefult = reactive({
-  arch: '',
-  release: '',
-  buildType: '',
-  customPkg: [],
+  baseImageID: '',
+  kickStartId: '',
+  kickStartContent: '',
 });
 if (id) {
   getJobParam(id).then((res) => {
@@ -23,10 +22,9 @@ if (id) {
     if (data) {
       name.value = data.JobLabel;
       description.value = data.JobDesc;
-      buildDefult.arch = data.Arch;
-      buildDefult.release = data.Release;
-      buildDefult.buildType = data.BuildType;
-      buildDefult.customPkg = (data.CustomPkg && data.CustomPkg.split(',')) || [];
+      buildDefult.baseImageID = data.BaseImageID;
+      buildDefult.kickStartId = data.KickStartID;
+      buildDefult.kickStartContent = data.KickStartContent;
     }
   });
 }
@@ -35,10 +33,10 @@ const build = () => {
   const data = buildjob?.value?.build();
   data.label = name.value;
   data.desc = description.value;
-  createJob(data).then((res) => {
+  buildFromIso(data).then((res) => {
     if (res?.data?.JobName) {
       // 构建成功跳转详情
-      router.push(`/control/build-job/build-log/${res.data.JobName}`);
+      router.push(`/control/build-iso/build-log/${res.data.JobName}`);
     }
   });
 };
@@ -47,7 +45,7 @@ const build = () => {
   <div class="build">
     <BuildLeftTemplate v-model:name="name" v-model:description="description" @build="build"></BuildLeftTemplate>
     <div class="build-right">
-      <BuildJob ref="buildjob" :default-value="buildDefult"></BuildJob>
+      <BuildIsoToSelect ref="buildjob" :build-defult="buildDefult"></BuildIsoToSelect>
     </div>
   </div>
 </template>
